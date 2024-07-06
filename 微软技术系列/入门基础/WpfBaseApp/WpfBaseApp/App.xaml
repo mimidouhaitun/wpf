@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WpfBaseApp"
-             StartupUri="绑定DataContent.xaml">
+             StartupUri="Comman的使用/Comman的使用测试.xaml">
     <Application.Resources>
          
     </Application.Resources>
