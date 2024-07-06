@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <ApplicationDefinition Update="App.xaml">
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="样式-多条件触发器.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="样式1.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="样式中的事件触发器.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="样式触发器2.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="绑定DataContent.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="绑定元素属性值.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="样式-多条件触发器.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="样式1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="样式中的事件触发器.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="样式触发器2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="绑定DataContent.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="绑定元素属性值.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>
