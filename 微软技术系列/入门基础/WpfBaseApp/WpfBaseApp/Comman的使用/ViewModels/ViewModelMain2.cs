@@ -1,11 +1,11 @@
 ﻿using System.Windows;
 
-namespace WpfBaseApp.Comman的使用
+namespace WpfBaseApp.Comman的使用.ViewModels
 {
     /// <summary>
     /// 简化了MainViewModel的写法
     /// </summary>
-    public class MainViewModel2 : ViewModelBase
+    public class ViewModelMain2 : ViewModelBase
     {
 #pragma warning disable
         private string _name;
@@ -22,14 +22,15 @@ namespace WpfBaseApp.Comman的使用
             }
         }
         public MyCommand ShowMsg { get; set; }
-        public MainViewModel2() { 
-            this.ShowMsg = new MyCommand(Show);
-            this.Name = "";
+        public ViewModelMain2()
+        {
+            ShowMsg = new MyCommand(Show);
+            Name = "";
         }
 
         public void Show()
         {
-            this.Name = "张三";
+            Name = "张三";
             MessageBox.Show("点击了按钮");
         }
 

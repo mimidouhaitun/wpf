@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace WpfBaseApp.Comman的使用
+namespace WpfBaseApp.Comman的使用.ViewModels
 {
-    public class MainViewModel:INotifyPropertyChanged
+    public class ViewModelMain : INotifyPropertyChanged
     {
 #pragma warning disable
         private string _name;
@@ -25,16 +25,17 @@ namespace WpfBaseApp.Comman的使用
             }
         }
         public MyCommand ShowMsg { get; set; }
-        public MainViewModel() { 
-            this.ShowMsg = new MyCommand(Show);
-            this.Name = "";
+        public ViewModelMain()
+        {
+            ShowMsg = new MyCommand(Show);
+            Name = "";
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public void Show()
         {
-            this.Name = "张三";
+            Name = "张三";
             MessageBox.Show("点击了按钮");
         }
 

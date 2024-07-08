@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using WpfBaseApp.Comman的使用.ViewModels;
 
 namespace WpfBaseApp.Comman的使用
 {
@@ -10,7 +11,7 @@ namespace WpfBaseApp.Comman的使用
         public Comman的使用测试()
         {
             InitializeComponent();
-            this.DataContext=new MainViewModel();
+            this.DataContext=new ViewModelMain();
         }
     }
 }
