@@ -1,0 +1,1 @@
+﻿使用两个DLL项目中的视图，ModelAProfile.cs和ModelBProfile.cs，即使在两个不同的项目中，名称也不能相同

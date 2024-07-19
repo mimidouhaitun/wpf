@@ -1,0 +1,21 @@
+﻿使用两个DLL项目中的视图，ModelAProfile.cs和ModelBProfile.cs，即使在两个不同的项目中，名称也不能相同
+
+
+        /* 要让model和vie自动匹配，需要
+         * 1.model的名称=view的名称+Model 
+         * 2.view中加入以下两行
+         * xmlns:prism="http://prismlibrary.com/"
+         * prism:ViewModelLocator.AutoWireViewModel="True"
+        */
+
+
+虽然使用包含文件夹的形式return new DirectoryModuleCatalog() { ModulePath = @".\Modules" }; 
+但是仍然可以在子模块中添加断点调试
+
+1.父组件MainWindowViewModel.cs给子组件UserControlAModel.cs传递参数，子组件接收参数
+
+2.在子组件中判断是否可以切换到其他子组件
+
+3.在父组件中返回上一步
+
+4.父窗体通过dialog的方式打开子窗体，并传递参数给子窗体，并接收子窗体返回的参数

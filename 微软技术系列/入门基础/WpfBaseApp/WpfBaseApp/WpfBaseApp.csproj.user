@@ -13,6 +13,9 @@
     <Compile Update="Comman的使用\Comman的使用测试.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="动画\双精度动画.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="样式-多条件触发器.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,9 +34,6 @@
     <Compile Update="绑定元素属性值.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="资源字典例子1.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Comman的使用\Comman MVVMlight.xaml">
@@ -42,7 +42,7 @@
     <Page Update="Comman的使用\Comman的使用测试.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Resources\Dictionary1.xaml">
+    <Page Update="动画\双精度动画.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="样式-多条件触发器.xaml">
@@ -61,9 +61,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="绑定元素属性值.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="资源字典例子1.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

@@ -1,0 +1,3 @@
+﻿ContentControl的用法示例
+
+ViewModel的名字=view的名字+Model，即可自动匹配，不用在后台写  this.DataContext = new MainWindowViewModel();

@@ -1,0 +1,20 @@
+﻿<Window x:Class="PrismDemmo1.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Title="{Binding Title}" Height="350" Width="525" WindowStartupLocation="CenterScreen" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Content="打开模块A" Margin="5" Command="{Binding OpenCommand}" CommandParameter="ViewA"></Button>
+            <Button Content="打开模块B" Margin="5" Command="{Binding OpenCommand}" CommandParameter="ViewB"></Button>
+            <Button Content="打开模块C" Margin="5" Command="{Binding OpenCommand}" CommandParameter="ViewC"></Button>
+        </StackPanel>
+        <ContentControl Grid.Row="1" Content="{Binding Body}"></ContentControl>
+        <!-- <ContentControl Grid.Row="1" prism:RegionManager.RegionName="ContentRegion" /> -->
+    </Grid>
+</Window>
