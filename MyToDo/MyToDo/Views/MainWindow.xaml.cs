@@ -51,5 +51,10 @@ namespace MyToDo.Views
                 }
             };
         }
+
+        private void menuBar_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            drawerHost.IsLeftDrawerOpen = false;
+        }
     }
 }

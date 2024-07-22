@@ -16,7 +16,10 @@ namespace MyToDo
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<IndexView>();
+            containerRegistry.RegisterForNavigation<ToDoView>();
+            containerRegistry.RegisterForNavigation<MemoView>();
+            containerRegistry.RegisterForNavigation<SettingsView>();
         }
     }
 }

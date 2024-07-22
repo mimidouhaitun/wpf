@@ -7,9 +7,43 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+                <materialDesign:BundledTheme 
+                    BaseTheme="Dark"
+                    PrimaryColor="DeepPurple" 
+                    SecondaryColor="Lime" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesign3.Defaults.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="ListBoxItem" x:Key="MyListBoxItemStyle">
+                <Setter Property="MinHeight" Value="40"></Setter>
+                <Setter Property="Margin" Value=" 20 0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Grid>
+                                <!-- Border没有设置宽高，默认就是容器的宽高,Border和ContentPresenter没有设置行号和列号，
+                                则后面的控件会覆盖前面的控件，但后面的控件设置了透明度，则可以显示前面的控件，
+                                另外，Border除了边框之外，中间部分默认是透明的-->
+                                <Border x:Name="borderHeader" ></Border>
+                                <Border x:Name="border"></Border>
+                                <ContentPresenter  
+                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalAlignment}" 
+                                    Margin="{TemplateBinding Margin}"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="borderHeader" Property="BorderThickness" Value="4,0,0,0" />
+                                    <Setter TargetName="borderHeader" Property="BorderBrush" Value="{DynamicResource MaterialDesign.Brush.Primary.Light}" />
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource MaterialDesign.Brush.Primary.Light}" />
+                                    <Setter TargetName="border" Property="Opacity" Value="0.2" />
+                                </Trigger>                                
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
