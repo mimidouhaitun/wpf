@@ -1,0 +1,3 @@
+﻿自动格式化xaml文件：
+1.安装插件 XAML Styler for vs2022 
+2.项目根目录下创建文件：Settings.XamlStyler，并拷贝内容，这样所有人都是用同样的格式了
