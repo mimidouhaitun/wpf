@@ -123,7 +123,6 @@
                             </StackPanel>
                             <ToggleButton DockPanel.Dock="Right" />
                         </DockPanel>
-
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
