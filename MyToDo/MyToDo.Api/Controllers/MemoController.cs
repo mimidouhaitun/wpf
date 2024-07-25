@@ -8,39 +8,39 @@ namespace MyToDo.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class ToDoController : ControllerBase
+    public class MemoController : ControllerBase
     {
-        private readonly ITodoService todoService;
+        private readonly IMemoService memoService;
 
-        public ToDoController(ITodoService todoService) 
+        public MemoController(IMemoService memoService) 
         {
-            this.todoService = todoService;
+            this.memoService = memoService;
         }
 
         [HttpGet]
         public async Task<ApiResponse> Get(int id)
         {
-           return await todoService.GetSingleAsync(id);
+           return await memoService.GetSingleAsync(id);
         }
         [HttpGet]
         public async Task<ApiResponse> GetAll([FromQuery] QueryParameter query)
         {
-            return await todoService.GetAllAsync(query);
+            return await memoService.GetAllAsync(query);
         }
         [HttpPost]
-        public async Task<ApiResponse> Add([FromBody] ToDoDto model)
+        public async Task<ApiResponse> Add([FromBody] MemoDto model)
         {
-            return await todoService.AddAsync(model);
+            return await memoService.AddAsync(model);
         }
         [HttpPost]
-        public async Task<ApiResponse> Update([FromBody] ToDoDto model)
+        public async Task<ApiResponse> Update([FromBody] MemoDto model)
         {
-            return await todoService.UpdateAsync(model);
+            return await memoService.UpdateAsync(model);
         }
         [HttpDelete]
         public async Task<ApiResponse> Delete(int id)
         {
-            return await todoService.DeleteAsync(id);
+            return await memoService.DeleteAsync(id);
         }
     }
 }

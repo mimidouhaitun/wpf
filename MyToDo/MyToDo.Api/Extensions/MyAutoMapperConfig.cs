@@ -12,6 +12,8 @@ namespace MyToDo.Api.Extensions
             return new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<ToDo, ToDoDto>().ReverseMap();
+                cfg.CreateMap<Memo, MemoDto>().ReverseMap();
+                cfg.CreateMap<User, UserDto>().ReverseMap();
             });
         }
     }

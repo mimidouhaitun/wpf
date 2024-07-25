@@ -1,3 +1,5 @@
 ﻿1、安装Microsoft.EntityFrameworkCore.Sqlite ，不是Microsoft.EntityFrameworkCore.SqliteCore
-2、CodeFirst方式，创建好Model和DbContext之后，执行名Add-Migration，生成数据库脚本；
+2、CodeFirst方式，创建好Model和DbContext之后，执行名Add-Migration，生成数据库脚本
 3、Update-database ，执行数据库脚本，创建数据库
+4、UnitOfWork（封装了Repository）安装和使用，新的实体只需要维护Repository
+5、AutoMapper的安装和使用，新的实体只需要维护MyAutoMapperConfig.cs
