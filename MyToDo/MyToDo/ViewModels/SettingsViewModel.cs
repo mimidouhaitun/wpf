@@ -39,9 +39,9 @@ namespace MyToDo.ViewModels
 
         void CreateMenuBars()
         {
-            MenuBars.Add(new MenuBar() { Icon = "Home", ViewName = "SkinView", Title = "个性化" });
-            MenuBars.Add(new MenuBar() { Icon = "NoteOutline", ViewName = "ToDoView", Title = "系统设置" });
-            MenuBars.Add(new MenuBar() { Icon = "NotePlusOutline", ViewName = "AboutView", Title = "关于更多" });
+            MenuBars.Add(new MenuBar() { Icon = "Palette", ViewName = "SkinView", Title = "个性化" });
+            MenuBars.Add(new MenuBar() { Icon = "Cogs", ViewName = "ToDoView", Title = "系统设置" });
+            MenuBars.Add(new MenuBar() { Icon = "InformationSlabCircleOutline", ViewName = "AboutView", Title = "关于更多" });
         }
     }
 }

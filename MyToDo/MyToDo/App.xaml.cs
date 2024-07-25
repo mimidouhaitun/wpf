@@ -21,6 +21,7 @@ namespace MyToDo
             containerRegistry.RegisterForNavigation<MemoView>();
             containerRegistry.RegisterForNavigation<SettingsView>();
             containerRegistry.RegisterForNavigation<SkinView>();
+            containerRegistry.RegisterForNavigation<AboutView>();
         }
     }
 }
