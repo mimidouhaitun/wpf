@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using Microsoft.AspNetCore.Mvc;
 using MyToDo.Api.Context;
 using MyToDo.Api.Dtos;
 using MyToDo.Api.Parameters;
@@ -22,21 +23,25 @@ namespace MyToDo.Api.Controllers
         {
            return await todoService.GetSingleAsync(id);
         }
+
         [HttpGet]
-        public async Task<ApiResponse> GetAll([FromQuery] QueryParameter query)
+        public async Task<ApiResponse<IPagedList<ToDoDto>>> GetPageList([FromQuery] QueryParameter query)
         {
-            return await todoService.GetAllAsync(query);
+            return await todoService.GetPageListAsync(query);
         }
+
         [HttpPost]
         public async Task<ApiResponse> Add([FromBody] ToDoDto model)
         {
             return await todoService.AddAsync(model);
         }
+
         [HttpPost]
         public async Task<ApiResponse> Update([FromBody] ToDoDto model)
         {
             return await todoService.UpdateAsync(model);
         }
+
         [HttpDelete]
         public async Task<ApiResponse> Delete(int id)
         {

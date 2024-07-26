@@ -16,7 +16,7 @@ namespace MyToDo.ViewModels
     {
         public IEnumerable<ISwatch> Swatches { get; } = SwatchHelper.Swatches;
         private readonly PaletteHelper paletteHelper = new();
-        public DelegateCommand<object?> ChangeHueCommand {  get; set; }
+        public DelegateCommand<object> ChangeHueCommand {  get; set; }
         private bool _isDarkTheme;
         public bool IsDarkTheme
         {
@@ -31,7 +31,7 @@ namespace MyToDo.ViewModels
         }
         public SkinViewModel()
         {
-            ChangeHueCommand = new DelegateCommand<object?>(ChangeHue);
+            ChangeHueCommand = new DelegateCommand<object>(ChangeHue);
         }
         private static void ModifyTheme(Action<Theme> modificationAction)
         {
@@ -43,7 +43,7 @@ namespace MyToDo.ViewModels
             paletteHelper.SetTheme(theme);
         }
 
-        private void ChangeHue(object? obj)
+        private void ChangeHue(object obj)
         {
             var hue = (Color)obj!;
             Theme theme = paletteHelper.GetTheme();

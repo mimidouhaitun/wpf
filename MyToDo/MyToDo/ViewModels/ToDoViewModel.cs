@@ -1,29 +1,13 @@
 ﻿using MyToDo.Common.Models;
+using MyToDo.Service;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyToDo.ViewModels
 {
     public class ToDoViewModel:BindableBase
     {
-        public ToDoViewModel() 
-        {
-            ToDoDtos = new ObservableCollection<ToDoDto>();
-            CreateToDoList();
-            AddCommand = new DelegateCommand(Add);
-        }
-
-        private void Add()
-        {
-          IsRightDrawerOpen = true;
-        }
-
         private ObservableCollection<ToDoDto> toDoDtos;
 
         public ObservableCollection<ToDoDto> ToDoDtos
@@ -33,18 +17,41 @@ namespace MyToDo.ViewModels
         }
 
         private bool isRightDrawerOpen;
+        private readonly IToDoService service;
 
         public bool IsRightDrawerOpen
         {
             get { return isRightDrawerOpen; }
             set { isRightDrawerOpen = value; RaisePropertyChanged(); }
         }
-        public DelegateCommand AddCommand { get; set; }
-        void CreateToDoList()
+
+        public ToDoViewModel(IToDoService service)
         {
-            for (int i = 0; i < 20; i++)
+            ToDoDtos = new ObservableCollection<ToDoDto>();
+            AddCommand = new DelegateCommand(Add);
+            this.service = service;
+            CreateToDoListAsync(); //需要放在service赋值之后
+        }
+
+        private void Add()
+        {
+            IsRightDrawerOpen = true;
+        }
+        public DelegateCommand AddCommand { get; set; }
+        async void CreateToDoListAsync()
+        {
+            var apiResponse = await service.GetPageListAsync(new Parameters.QueryParameter()
             {
-                ToDoDtos.Add(new ToDoDto() { Title = "标题" + i, Content = "测试数据..." });
+                PageIndex = 0,
+                PageSize = 100
+            });
+            if (apiResponse.Status)
+            {
+                ToDoDtos.Clear();
+                foreach(var toDoDto in apiResponse.Result.Items)
+                {
+                    ToDoDtos.Add(toDoDto);
+                }
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
+using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 using AutoMapper;
 using MyToDo.Api.Context;
 using MyToDo.Api.Dtos;
@@ -43,14 +44,24 @@ namespace MyToDo.Api.Service
             return new ApiResponse(false, "删除数据失败");
         }
 
-        public async Task<ApiResponse> GetAllAsync(QueryParameter query)
+        public async Task<ApiResponse<IPagedList<ToDoDto>>> GetPageListAsync(QueryParameter query)
         {
             var repository = unitOfWork.GetRepository<ToDo>();
             var pagedList = await repository.GetPagedListAsync(
                 predicate: a => string.IsNullOrWhiteSpace(query.Search) ? true : a.Title.Contains(query.Search),
                 pageSize: query.PageSize, pageIndex: query.PageIndex,
                 orderBy: a => a.OrderByDescending(b => b.CreateDate));
-            return new ApiResponse(true, pagedList);
+            var pagedList1=PagedList.From<ToDoDto,ToDo>(pagedList, (todos) =>
+            {
+                var todoDtos = new List<ToDoDto>();
+                foreach(var todo in todos)
+                {
+                    var todoDto=mapper.Map<ToDoDto>(todo);
+                    todoDtos.Add(todoDto);
+                }
+                return todoDtos;
+            });
+            return new ApiResponse<IPagedList<ToDoDto>>(true, pagedList1);
         }
 
         public async Task<ApiResponse> GetSingleAsync(int id)

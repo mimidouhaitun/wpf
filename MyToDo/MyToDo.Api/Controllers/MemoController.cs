@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Arch.EntityFrameworkCore.UnitOfWork.Collections;
+using Microsoft.AspNetCore.Mvc;
 using MyToDo.Api.Context;
 using MyToDo.Api.Dtos;
 using MyToDo.Api.Parameters;
@@ -23,9 +24,9 @@ namespace MyToDo.Api.Controllers
            return await memoService.GetSingleAsync(id);
         }
         [HttpGet]
-        public async Task<ApiResponse> GetAll([FromQuery] QueryParameter query)
+        public async Task<ApiResponse<IPagedList<MemoDto>>> GetPageList([FromQuery] QueryParameter query)
         {
-            return await memoService.GetAllAsync(query);
+            return await memoService.GetPageListAsync(query);
         }
         [HttpPost]
         public async Task<ApiResponse> Add([FromBody] MemoDto model)

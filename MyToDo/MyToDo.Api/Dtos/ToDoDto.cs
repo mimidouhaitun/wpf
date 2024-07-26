@@ -2,6 +2,7 @@
 {
     public class ToDoDto:BaseDto
     {
+#pragma warning disable
         private string title;
         private string content;
         private int status;

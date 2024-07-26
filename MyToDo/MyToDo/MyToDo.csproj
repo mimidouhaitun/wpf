@@ -9,7 +9,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="RestSharp" Version="111.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\user.jpg" />

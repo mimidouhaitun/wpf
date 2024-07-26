@@ -29,6 +29,5 @@ namespace MyToDo.Common.Models
 			get { return updateDate; }
 			set { updateDate = value; }
 		}
-
 	}
 }
