@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using MyToDo.Extensions;
+using Prism.Events;
+using System.Windows;
 
 namespace MyToDo.Views
 {
@@ -7,7 +9,7 @@ namespace MyToDo.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(IEventAggregator eventAggregator)
         {
             InitializeComponent();
             this.btnMin.Click += (s, e) =>
@@ -50,6 +52,15 @@ namespace MyToDo.Views
                     this.WindowState = WindowState.Maximized;
                 }
             };
+
+            eventAggregator.SubscribeExt(arg =>
+            {
+                dialogHostRoot.IsOpen=arg.IsOpen; //设置打开或者关闭对话框
+                if (dialogHostRoot.IsOpen)
+                {
+                    dialogHostRoot.DialogContent = new ProgressView();//设置对话框内容
+                }
+            });
         }
 
         private void menuBar_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

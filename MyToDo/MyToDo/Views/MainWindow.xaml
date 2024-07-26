@@ -15,7 +15,8 @@
         Style="{StaticResource MaterialDesignWindow}"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None">
-    <materialDesign:DialogHost DialogTheme="Inherit"
+    <materialDesign:DialogHost x:Name="dialogHostRoot"
+                               DialogTheme="Inherit"
                                Identifier="RootDialog"
                                SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
 
