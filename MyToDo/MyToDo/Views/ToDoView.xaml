@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="MyToDo.Views.ToDoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behav="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MyToDo.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -21,7 +22,14 @@
                     <TextBox Width="250"
                              VerticalAlignment="Center"
                              myMd:HintAssist.Hint="查找待办事项..."
-                             myMd:TextFieldAssist.HasClearButton="True" />
+                             myMd:TextFieldAssist.HasClearButton="True"
+                             Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="查询" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <TextBlock Margin="10,0"
                                VerticalAlignment="Center"
                                Text="筛选：" />
@@ -33,10 +41,12 @@
                 </StackPanel>
                 <Button Margin="10,5"
                         HorizontalAlignment="Right"
-                        Command="{Binding AddCommand}"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="新增"
                         Content="+添加待办" />
                 <!--  第二行  -->
                 <ScrollViewer Grid.Row="1">
+                    <!--  卡片数据模板  -->
                     <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding ToDoDtos}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -45,6 +55,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
+                                <!--  数据模板动画效果  -->
                                 <myMd:TransitioningContent OpeningEffect="{myMd:TransitionEffect Kind=ExpandIn}">
                                     <Grid Width="220"
                                           MinHeight="180"
@@ -54,6 +65,11 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
+                                        <behav:Interaction.Triggers>
+                                            <behav:EventTrigger EventName="MouseLeftButtonUp">
+                                                <behav:InvokeCommandAction Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                            </behav:EventTrigger>
+                                        </behav:Interaction.Triggers>
                                         <Border Grid.RowSpan="2"
                                                 Background="Green"
                                                 CornerRadius="3" />
@@ -101,18 +117,23 @@
                                 DockPanel.Dock="Top"
                                 Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center" Text="状态：" />
-                        <ComboBox VerticalAlignment="Center" SelectedIndex="0">
+                        <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding CurrToDoDto.Status}">
                             <ComboBoxItem>待办</ComboBoxItem>
                             <ComboBoxItem>已完成</ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
                     <TextBox Margin="20,10"
                              myMd:HintAssist.Hint="请输入待办概要"
-                             DockPanel.Dock="Top" />
+                             DockPanel.Dock="Top"
+                             Text="{Binding CurrToDoDto.Title}" />
                     <TextBox Margin="20,10"
                              myMd:HintAssist.Hint="请输入待办内容"
-                             DockPanel.Dock="Top" />
-                    <Button Content="添加到待办" DockPanel.Dock="Top" />
+                             DockPanel.Dock="Top"
+                             Text="{Binding CurrToDoDto.Content}" />
+                    <Button Command="{Binding ExecuteCommand}"
+                            CommandParameter="新增"
+                            Content="添加到待办"
+                            DockPanel.Dock="Top" />
                 </DockPanel>
             </myMd:DrawerHost.RightDrawerContent>
         </myMd:DrawerHost>

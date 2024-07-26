@@ -53,11 +53,11 @@ namespace BlankApp1.ViewModels
             viewc.ShowDialog();
         }
 
-        public void Open(string param)
+        public void Open(string target)
         {
             NavigationParameters navigationParameters = new NavigationParameters();
             navigationParameters.Add("Title", "Hello!");  //传递参数
-            _regionManager.Regions["ContentRegion"].RequestNavigate(param, CallBack, navigationParameters);
+            _regionManager.Regions["ContentRegion"].RequestNavigate(target, CallBack, navigationParameters);
         }
 
         /// <summary>

@@ -4,48 +4,96 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
 
 namespace MyToDo.ViewModels
 {
     public class ToDoViewModel: NavigationBaseViewModel
     {
+        #region 字段
         private ObservableCollection<ToDoDto> toDoDtos;
+        private ToDoDto currToDoDto;
+        private bool isRightDrawerOpen;
+        private readonly IToDoService service; 
+        private string search;
+        #endregion
 
+        #region 属性
+        public DelegateCommand<string> ExecuteCommand { get; set; }
+        public DelegateCommand<ToDoDto> SelectedCommand { get; set; }
         public ObservableCollection<ToDoDto> ToDoDtos
         {
             get { return toDoDtos; }
             set { toDoDtos = value; RaisePropertyChanged(); }
         }
-
-        private bool isRightDrawerOpen;
-        private readonly IToDoService service;
-
         public bool IsRightDrawerOpen
         {
             get { return isRightDrawerOpen; }
             set { isRightDrawerOpen = value; RaisePropertyChanged(); }
         }
+        public ToDoDto CurrToDoDto
+        {
+            get { return currToDoDto; }
+            set { currToDoDto = value; RaisePropertyChanged(); }
+        }        
+        public string Search
+        {
+            get { return search; }
+            set { search = value; RaisePropertyChanged(); }
+        }
+        #endregion
 
+        #region 方法
         public ToDoViewModel(IToDoService service, IContainerProvider containerProvider):base(containerProvider)
         {
             ToDoDtos = new ObservableCollection<ToDoDto>();
-            AddCommand = new DelegateCommand(Add);
+            ExecuteCommand = new DelegateCommand<string>(Execute);
+            SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
             this.service = service;            
         }
-
-        private void Add()
+        private void Execute(string obj)
         {
-            IsRightDrawerOpen = true;
+            switch (obj)
+            {
+                case "新增":
+                    IsRightDrawerOpen = true; //显示右边的抽屉窗口        
+                    break;
+                case "查询":
+                     GetToDoListAsync();
+                    break;
+            }
+            
         }
-        public DelegateCommand AddCommand { get; set; }
-        async void CreateToDoListAsync()
+        private async void Selected(ToDoDto dto)
+        {
+            try
+            {
+                PublishLoading(true);
+                var result = await service.GetFirstOrDefaultAsync(dto.Id);
+                if (result.Status)
+                {
+                    CurrToDoDto = result.Result;
+                    IsRightDrawerOpen = true; //显示右边的抽屉窗口
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                PublishLoading(false);
+            }
+        }
+        async void GetToDoListAsync()
         {
             base.PublishLoading(true);
             var apiResponse = await service.GetPageListAsync(new Parameters.QueryParameter()
             {
                 PageIndex = 0,
-                PageSize = 100
+                PageSize = 100,
+                Search=Search
             });
             if (apiResponse.Status)
             {
@@ -57,11 +105,11 @@ namespace MyToDo.ViewModels
             }
             base.PublishLoading(false);
         }
-
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-            CreateToDoListAsync(); //需要放在service赋值之后
+            GetToDoListAsync(); //需要放在service赋值之后
         }
+        #endregion
     }
 }

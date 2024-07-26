@@ -1,4 +1,5 @@
 ﻿using MyToDo.Parameters;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace MyToDo.Service
@@ -25,7 +26,7 @@ namespace MyToDo.Service
         {
             RequestConfig request = new RequestConfig();
             request.Method = RestSharp.Method.Post;
-            request.Parameter = entity;
+            request.StringBody = JsonConvert.SerializeObject(entity);
             request.Route = $"api/{controllerName}/Add";
             return await restClient.ExecuteAsync<T>(request);
         }
@@ -34,8 +35,7 @@ namespace MyToDo.Service
         {
             RequestConfig request = new RequestConfig();
             request.Method = RestSharp.Method.Delete;
-            request.Parameter = id;
-            request.Route = $"api/{controllerName}/Delete";
+            request.Route = $"api/{controllerName}/Delete?id={id}";
             return await restClient.ExecuteAsync(request);
         }
 
@@ -52,8 +52,7 @@ namespace MyToDo.Service
         {
             RequestConfig request = new RequestConfig();
             request.Method = RestSharp.Method.Get;
-            request.Parameter = id;
-            request.Route = $"api/{controllerName}/Get";
+            request.Route = $"api/{controllerName}/GetFirstOrDefault?id={id}";
             return await restClient.ExecuteAsync<T>(request);
         }
 
@@ -61,7 +60,7 @@ namespace MyToDo.Service
         {
             RequestConfig request = new RequestConfig();
             request.Method = RestSharp.Method.Post;
-            request.Parameter = entity;
+            request.StringBody = JsonConvert.SerializeObject(entity);
             request.Route = $"api/{controllerName}/Update";
             return await restClient.ExecuteAsync<T>(request);
         }

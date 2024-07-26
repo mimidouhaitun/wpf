@@ -8,16 +8,20 @@ namespace MyToDo.Service
         private readonly RestClient restClient;
         public MyHttpRestClient()
         {
-            this.restClient = new RestClient("http://localhost:5057/");
+            var options = new RestClientOptions("http://localhost:5057/")
+            {
+                Timeout = System.TimeSpan.FromSeconds(5),
+            };
+            this.restClient = new RestClient(options) ;
         }
 
         public async Task<ApiResponse> ExecuteAsync(RequestConfig baseRequest)
         {
             var request = new RestRequest(baseRequest.Route, baseRequest.Method);
             request.AddHeader("Content-Type", "application/json");
-            if (request.Parameters != null)
+            if (baseRequest.Method == Method.Post && string.IsNullOrWhiteSpace(baseRequest.StringBody) == false)
             {
-                request.AddParameter("param", System.Text.Json.JsonSerializer.Serialize(baseRequest.Parameter));
+                request.AddStringBody(baseRequest.StringBody, ContentType.Json);
             }
             var response = await restClient.ExecuteAsync(request);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(response.Content);
@@ -26,10 +30,10 @@ namespace MyToDo.Service
         public async Task<ApiResponse<T>> ExecuteAsync<T>(RequestConfig baseRequest)
         {
             var request = new RestRequest(baseRequest.Route, baseRequest.Method);
-            request.AddHeader("Content-Type", "application/json");
-            if (request.Parameters != null)
+            request.AddHeader("Content-Type", baseRequest.ContentType);
+            if (baseRequest.Method == Method.Post && string.IsNullOrWhiteSpace( baseRequest.StringBody)==false)
             {
-                request.AddParameter("param", System.Text.Json.JsonSerializer.Serialize(baseRequest.Parameter));
+                request.AddStringBody(baseRequest.StringBody, ContentType.Json);
             }
             var response = await restClient.ExecuteAsync(request);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse<T>>(response.Content);

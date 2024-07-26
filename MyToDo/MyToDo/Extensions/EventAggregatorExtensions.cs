@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyToDo.Extensions
 {
-    public static class DialogExtensions
+    public static class EventAggregatorExtensions
     {
         /// <summary>
         /// 推送消息

@@ -19,7 +19,7 @@ namespace MyToDo.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResponse> Get(int id)
+        public async Task<ApiResponse> GetFirstOrDefault(int id)
         {
            return await memoService.GetSingleAsync(id);
         }
