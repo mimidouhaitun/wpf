@@ -10,7 +10,7 @@ namespace MyToDo.Service
         {
             var options = new RestClientOptions("http://localhost:5057/")
             {
-                Timeout = System.TimeSpan.FromSeconds(5),
+                Timeout = System.TimeSpan.FromSeconds(15),
             };
             this.restClient = new RestClient(options) ;
         }

@@ -131,8 +131,8 @@
                              DockPanel.Dock="Top"
                              Text="{Binding CurrToDoDto.Content}" />
                     <Button Command="{Binding ExecuteCommand}"
-                            CommandParameter="新增"
-                            Content="添加到待办"
+                            CommandParameter="保存"
+                            Content="保存"
                             DockPanel.Dock="Top" />
                 </DockPanel>
             </myMd:DrawerHost.RightDrawerContent>

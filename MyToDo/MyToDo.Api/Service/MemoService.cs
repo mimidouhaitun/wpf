@@ -81,7 +81,8 @@ namespace MyToDo.Api.Service
             old.Content = model.Content;
             repository.Update(old);
             await unitOfWork.SaveChangesAsync();
-            return new ApiResponse(true, "更新成功");
+            var dto = mapper.Map<MemoDto>(old);
+            return new ApiResponse(true, dto);
         }
     }
 }

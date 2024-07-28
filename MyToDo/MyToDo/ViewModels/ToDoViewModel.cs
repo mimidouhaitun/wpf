@@ -2,10 +2,10 @@
 using MyToDo.Service;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace MyToDo.ViewModels
 {
@@ -15,7 +15,7 @@ namespace MyToDo.ViewModels
         private ObservableCollection<ToDoDto> toDoDtos;
         private ToDoDto currToDoDto;
         private bool isRightDrawerOpen;
-        private readonly IToDoService service; 
+        private readonly IToDoService service;
         private string search;
         #endregion
 
@@ -50,21 +50,65 @@ namespace MyToDo.ViewModels
             ToDoDtos = new ObservableCollection<ToDoDto>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
-            this.service = service;            
+            this.service = service;
         }
         private void Execute(string obj)
         {
             switch (obj)
             {
                 case "新增":
-                    IsRightDrawerOpen = true; //显示右边的抽屉窗口        
+                    IsRightDrawerOpen = true; //显示右边的抽屉窗口
+                    this.CurrToDoDto = new ToDoDto();
                     break;
                 case "查询":
                      GetToDoListAsync();
                     break;
+                case "保存":
+                    Save();
+                    break;
             }
             
         }
+
+        private async void Save()
+        {
+           if(string.IsNullOrWhiteSpace(CurrToDoDto.Title) 
+                || string.IsNullOrWhiteSpace(CurrToDoDto.Content))
+            {
+                return;
+            }
+            try
+            {
+                PublishLoading(true);
+                if (CurrToDoDto.Id == 0)
+                {
+                    var result = await service.AddAsync(CurrToDoDto);
+                    ToDoDtos.Add(result.Result);
+                    CurrToDoDto = result.Result;                    
+                }
+                else
+                {
+                    var result = await service.UpdateAsync(CurrToDoDto);
+                    if (result.Status)
+                    {
+                        var todo = ToDoDtos.First(a => a.Id == result.Result.Id);
+                        todo.Title = result.Result.Title;
+                        todo.Content = result.Result.Content;                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            finally
+            {
+                PublishLoading(false);
+                IsRightDrawerOpen = false;
+            }
+           
+        }
+
         private async void Selected(ToDoDto dto)
         {
             try
