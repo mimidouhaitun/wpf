@@ -4,11 +4,13 @@ using AutoMapper;
 using MyToDo.Api.Context;
 using MyToDo.Api.Dtos;
 using MyToDo.Api.Parameters;
+using System.Net.WebSockets;
 
 namespace MyToDo.Api.Service
 {
     public interface ITodoService:IBaseService<ToDoDto>
     {
+        Task<ApiResponse<IPagedList<ToDoDto>>> GetPageListAsync(ToDoParameter query);
     }
 
     public class ToDoService : ITodoService
@@ -46,24 +48,32 @@ namespace MyToDo.Api.Service
 
         public async Task<ApiResponse<IPagedList<ToDoDto>>> GetPageListAsync(QueryParameter query)
         {
+            return await Task.Run(() =>
+            {
+                return new ApiResponse<IPagedList<ToDoDto>>(true, new MyPageList<ToDoDto>());
+            });
+            
+        }
+        public async Task<ApiResponse<IPagedList<ToDoDto>>> GetPageListAsync(ToDoParameter query)
+        {
             var repository = unitOfWork.GetRepository<ToDo>();
             var pagedList = await repository.GetPagedListAsync(
-                predicate: a => string.IsNullOrWhiteSpace(query.Search) ? true : a.Title.Contains(query.Search),
+                predicate: a => (string.IsNullOrWhiteSpace(query.Search) ? true : a.Title.Contains(query.Search))
+                && (query.Status == 0 ? true : a.Status == query.Status),
                 pageSize: query.PageSize, pageIndex: query.PageIndex,
                 orderBy: a => a.OrderByDescending(b => b.CreateDate));
-            var pagedList1=PagedList.From<ToDoDto,ToDo>(pagedList, (todos) =>
+            var pagedList1 = PagedList.From<ToDoDto, ToDo>(pagedList, (todos) =>
             {
                 var todoDtos = new List<ToDoDto>();
-                foreach(var todo in todos)
+                foreach (var todo in todos)
                 {
-                    var todoDto=mapper.Map<ToDoDto>(todo);
+                    var todoDto = mapper.Map<ToDoDto>(todo);
                     todoDtos.Add(todoDto);
                 }
                 return todoDtos;
             });
             return new ApiResponse<IPagedList<ToDoDto>>(true, pagedList1);
         }
-
         public async Task<ApiResponse> GetSingleAsync(int id)
         {
             var repository = unitOfWork.GetRepository<ToDo>();
@@ -84,5 +94,24 @@ namespace MyToDo.Api.Service
             var dto = mapper.Map<ToDoDto>(old);
             return new ApiResponse(true, dto);
         }
+    }
+
+    public class MyPageList<T> : IPagedList<T>
+    {
+        public int IndexFrom => 0;
+
+        public int PageIndex => 0;
+
+        public int PageSize => 10;
+
+        public int TotalCount =>0;
+
+        public int TotalPages => 0;
+
+        public IList<T> Items => new List<T>();
+
+        public bool HasPreviousPage => true;
+
+        public bool HasNextPage => true;
     }
 }

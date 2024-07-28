@@ -17,7 +17,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <!--  第一行  -->
+                <!--  第一行：查询条件  -->
                 <StackPanel Margin="15,0,0,0" Orientation="Horizontal">
                     <TextBox Width="250"
                              VerticalAlignment="Center"
@@ -33,7 +33,7 @@
                     <TextBlock Margin="10,0"
                                VerticalAlignment="Center"
                                Text="筛选：" />
-                    <ComboBox SelectedIndex="0">
+                    <ComboBox SelectedIndex="{Binding Status}">
                         <ComboBoxItem>全部</ComboBoxItem>
                         <ComboBoxItem>代办</ComboBoxItem>
                         <ComboBoxItem>已完成</ComboBoxItem>
@@ -44,7 +44,7 @@
                         Command="{Binding ExecuteCommand}"
                         CommandParameter="新增"
                         Content="+添加待办" />
-                <!--  第二行  -->
+                <!--  第二行：数据列表  -->
                 <ScrollViewer Grid.Row="1">
                     <!--  卡片数据模板  -->
                     <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding ToDoDtos}">
@@ -65,24 +65,41 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
+                                        <!--  定义ItemsControl的单击事件，并传值  -->
                                         <behav:Interaction.Triggers>
                                             <behav:EventTrigger EventName="MouseLeftButtonUp">
                                                 <behav:InvokeCommandAction Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
                                             </behav:EventTrigger>
                                         </behav:Interaction.Triggers>
-                                        <Border Grid.RowSpan="2"
-                                                Background="Green"
-                                                CornerRadius="3" />
-                                        <myMd:PopupBox HorizontalAlignment="Right">
+                                        <!--  定义底层背景  -->
+                                        <Border Grid.RowSpan="2" CornerRadius="3">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="1">
+                                                            <Setter Property="Background" Value="#1E90FF" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Status}" Value="2">
+                                                            <Setter Property="Background" Value="#3CB371" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                        </Border>
+                                        <!--  定义右侧的删除按钮  -->
+                                        <myMd:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
                                             <Button Content="删除" />
                                         </myMd:PopupBox>
+                                        <!--  第一行  -->
                                         <TextBlock Margin="10,5"
                                                    FontWeight="Bold"
                                                    Text="{Binding Title}" />
+                                        <!--  第二行  -->
                                         <TextBlock Grid.Row="1"
                                                    Margin="10,5"
                                                    Text="{Binding Content}" />
-                                        <Canvas Grid.Row="2" ClipToBounds="True">
+                                        <!--  增加一层容器，显示两个重叠的圆形，ClipToBounds表示裁剪掉多出的部分  -->
+                                        <Canvas Grid.RowSpan="2" ClipToBounds="True">
                                             <Border Canvas.Top="10"
                                                     Canvas.Right="-50"
                                                     Width="120"
@@ -105,7 +122,7 @@
                     </ItemsControl>
                 </ScrollViewer>
             </Grid>
-            <!--  右侧弹出的内容  -->
+            <!--  右侧弹出的新增/编辑页面  -->
             <myMd:DrawerHost.RightDrawerContent>
                 <DockPanel Width="300" LastChildFill="False">
                     <TextBlock Margin="20,10"
@@ -117,10 +134,11 @@
                                 DockPanel.Dock="Top"
                                 Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center" Text="状态：" />
-                        <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding CurrToDoDto.Status}">
-                            <ComboBoxItem>待办</ComboBoxItem>
-                            <ComboBoxItem>已完成</ComboBoxItem>
-                        </ComboBox>
+                        <ComboBox VerticalAlignment="Center"
+                                  DisplayMemberPath="DisplayName"
+                                  ItemsSource="{Binding StatusItems}"
+                                  SelectedItem="{Binding StatusSelectedItem}"
+                                  SelectedValuePath="Value" />
                     </StackPanel>
                     <TextBox Margin="20,10"
                              myMd:HintAssist.Hint="请输入待办概要"
@@ -130,7 +148,8 @@
                              myMd:HintAssist.Hint="请输入待办内容"
                              DockPanel.Dock="Top"
                              Text="{Binding CurrToDoDto.Content}" />
-                    <Button Command="{Binding ExecuteCommand}"
+                    <Button Margin="20,0"
+                            Command="{Binding ExecuteCommand}"
                             CommandParameter="保存"
                             Content="保存"
                             DockPanel.Dock="Top" />

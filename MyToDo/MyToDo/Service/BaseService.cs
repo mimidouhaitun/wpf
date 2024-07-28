@@ -14,8 +14,8 @@ namespace MyToDo.Service
     }
     public class BaseService<T> : IBaseService<T> where T : class
     {
-        private readonly MyHttpRestClient restClient;
-        private readonly string controllerName;
+        public readonly MyHttpRestClient restClient;
+        public readonly string controllerName;
 
         public BaseService(MyHttpRestClient restClient, string controllerName)
         {

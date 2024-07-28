@@ -10,12 +10,21 @@ namespace MyToDo.Service
 {
     public interface IToDoService:IBaseService<ToDoDto>
     {
-
+        Task<ApiResponse<PagedList<ToDoDto>>> GetPageListAsync(TodoParameter parameter);
     }
     public class ToDoService :BaseService<ToDoDto>, IToDoService
     {
         public ToDoService(MyHttpRestClient restClient) : base(restClient, "todo")
         {
+        }
+
+        public async Task<ApiResponse<PagedList<ToDoDto>>> GetPageListAsync(TodoParameter parameter)
+        {
+            RequestConfig request = new RequestConfig();
+            request.Method = RestSharp.Method.Get;
+            request.Route = $"api/{controllerName}/GetPageList?PageIndex={parameter.PageIndex}" +
+                $"&PageSize={parameter.PageSize}&Search={parameter.Search}&Status={parameter.Status}";
+            return await restClient.ExecuteAsync<PagedList<ToDoDto>>(request);
         }
     }
 }

@@ -17,6 +17,8 @@ namespace MyToDo.ViewModels
         private bool isRightDrawerOpen;
         private readonly IToDoService service;
         private string search;
+        private int status;
+        private MyItem statusSelectedItem;
         #endregion
 
         #region 属性
@@ -40,7 +42,34 @@ namespace MyToDo.ViewModels
         public string Search
         {
             get { return search; }
-            set { search = value; RaisePropertyChanged(); }
+            set
+            {
+                search = value;
+                RaisePropertyChanged(); 
+            }
+        }
+        public int Status
+        {
+            get => status; set
+            {
+                status = value;
+                RaisePropertyChanged();
+                GetToDoListAsync();
+            }
+        }
+        public ObservableCollection<MyItem> StatusItems { get; set; }      
+        public MyItem StatusSelectedItem
+        {
+            get => statusSelectedItem;
+            set
+            {
+                statusSelectedItem = value; 
+                RaisePropertyChanged();
+                if (CurrToDoDto != null)
+                {
+                    CurrToDoDto.Status = StatusSelectedItem.Value;
+                }                
+            }
         }
         #endregion
 
@@ -51,6 +80,12 @@ namespace MyToDo.ViewModels
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
             this.service = service;
+            StatusItems = new ObservableCollection<MyItem>()
+            {
+                new MyItem(){  DisplayName="待办",Value=1},
+                new MyItem(){  DisplayName="已完成",Value=2},
+            };
+            StatusSelectedItem=StatusItems.FirstOrDefault(a=>a.Value==1);
         }
         private void Execute(string obj)
         {
@@ -103,6 +138,7 @@ namespace MyToDo.ViewModels
             }
             finally
             {
+               GetToDoListAsync();
                 PublishLoading(false);
                 IsRightDrawerOpen = false;
             }
@@ -118,6 +154,7 @@ namespace MyToDo.ViewModels
                 if (result.Status)
                 {
                     CurrToDoDto = result.Result;
+                    StatusSelectedItem = StatusItems.FirstOrDefault(a => a.Value == CurrToDoDto.Status);
                     IsRightDrawerOpen = true; //显示右边的抽屉窗口
                 }
             }
@@ -133,11 +170,12 @@ namespace MyToDo.ViewModels
         async void GetToDoListAsync()
         {
             base.PublishLoading(true);
-            var apiResponse = await service.GetPageListAsync(new Parameters.QueryParameter()
+            var apiResponse = await service.GetPageListAsync(new Parameters.TodoParameter()
             {
                 PageIndex = 0,
                 PageSize = 100,
-                Search=Search
+                Search=Search,
+                Status=this.Status
             });
             if (apiResponse.Status)
             {

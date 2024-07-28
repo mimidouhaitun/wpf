@@ -25,7 +25,7 @@ namespace MyToDo.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ApiResponse<IPagedList<ToDoDto>>> GetPageList([FromQuery] QueryParameter query)
+        public async Task<ApiResponse<IPagedList<ToDoDto>>> GetPageList([FromQuery] ToDoParameter query)
         {
             return await todoService.GetPageListAsync(query);
         }
