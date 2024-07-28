@@ -6,6 +6,7 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyToDo.ViewModels
 {
@@ -24,6 +25,7 @@ namespace MyToDo.ViewModels
         #region 属性
         public DelegateCommand<string> ExecuteCommand { get; set; }
         public DelegateCommand<ToDoDto> SelectedCommand { get; set; }
+        public DelegateCommand<ToDoDto> DeleteCommand { get; set; }
         public ObservableCollection<ToDoDto> ToDoDtos
         {
             get { return toDoDtos; }
@@ -64,11 +66,7 @@ namespace MyToDo.ViewModels
             set
             {
                 statusSelectedItem = value; 
-                RaisePropertyChanged();
-                if (CurrToDoDto != null)
-                {
-                    CurrToDoDto.Status = StatusSelectedItem.Value;
-                }                
+                RaisePropertyChanged();                     
             }
         }
         #endregion
@@ -79,6 +77,7 @@ namespace MyToDo.ViewModels
             ToDoDtos = new ObservableCollection<ToDoDto>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
+            DeleteCommand = new DelegateCommand<ToDoDto>(DeleteAsync);
             this.service = service;
             StatusItems = new ObservableCollection<MyItem>()
             {
@@ -87,6 +86,25 @@ namespace MyToDo.ViewModels
             };
             StatusSelectedItem=StatusItems.FirstOrDefault(a=>a.Value==1);
         }
+
+        private async void DeleteAsync(ToDoDto dto)
+        {
+            try
+            {
+                PublishLoading(true);
+                var result = await service.DeleteAsync(dto.Id);
+                if (result.Status)
+                {
+                    var d = ToDoDtos.First(d => d.Id == dto.Id);
+                    ToDoDtos.Remove(d);
+                }
+            }
+            finally
+            {
+                PublishLoading(false);
+            }
+        }
+
         private void Execute(string obj)
         {
             switch (obj)
@@ -115,8 +133,9 @@ namespace MyToDo.ViewModels
             try
             {
                 PublishLoading(true);
+                CurrToDoDto.Status = StatusSelectedItem.Value;
                 if (CurrToDoDto.Id == 0)
-                {
+                {                 
                     var result = await service.AddAsync(CurrToDoDto);
                     ToDoDtos.Add(result.Result);
                     CurrToDoDto = result.Result;                    

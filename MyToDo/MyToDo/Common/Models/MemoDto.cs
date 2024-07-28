@@ -13,21 +13,21 @@ namespace MyToDo.Common.Models
         public string Title
         {
             get { return title; }
-            set { title = value; }
+            set { title = value; OnPropertyChanged(); }
         }
         private string content;
 
         public string Content
         {
             get { return content; }
-            set { content = value; }
+            set { content = value; OnPropertyChanged(); }
         }
         private int status;
 
         public int Status
         {
             get { return status; }
-            set { status = value; }
+            set { status = value; OnPropertyChanged(); }
         }
     }
 }

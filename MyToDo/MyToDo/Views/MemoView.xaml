@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="MyToDo.Views.MemoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:behav="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MyToDo.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,29 +17,47 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <!--  第一行  -->
+                <!--  第一行：查询条件，添加按钮  -->
                 <StackPanel Margin="15,0,0,0" Orientation="Horizontal">
                     <TextBox Width="250"
                              VerticalAlignment="Center"
                              myMd:HintAssist.Hint="查找备忘录..."
-                             myMd:TextFieldAssist.HasClearButton="True" />
+                             myMd:TextFieldAssist.HasClearButton="True"
+                             Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding ExecuteCommand}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                 </StackPanel>
                 <Button Margin="10,5"
                         HorizontalAlignment="Right"
                         Command="{Binding AddCommand}"
-                        Content="+添加备忘录" />
-                <!--  第二行  -->
+                        Content="添加备忘录" />
+                <!--  第二行：列表  -->
+                <StackPanel Grid.Row="1" Visibility="{Binding IsEmptyList}">
+                    <Image Width="120"
+                           Height="120"
+                           Source="/Images/wind.png" />
+                    <TextBlock Height="30"
+                               Margin="20,0"
+                               HorizontalAlignment="Center"
+                               FontSize="18"
+                               Text="尝试添加一些备忘录，以便在此处查看它们。" />
+                </StackPanel>
                 <ScrollViewer Grid.Row="1">
                     <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding MemoDtos}">
+                        <!--  指定容器类型  -->
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-
+                        <!--  定义单项的模板  -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
+                                <!--  定义数据载入的动画  -->
                                 <myMd:TransitioningContent OpeningEffect="{myMd:TransitionEffect Kind=ExpandIn}">
+                                    <!--  项目模板  -->
                                     <Grid Width="220"
                                           MinHeight="180"
                                           MaxHeight="250"
@@ -47,18 +66,33 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
+                                        <!--  父控件ItemsControl的点击事件  -->
+                                        <behav:Interaction.Triggers>
+                                            <!--  事件名可在ItemsControl中通过代码提示找到  -->
+                                            <behav:EventTrigger EventName="MouseLeftButtonUp">
+                                                <!--  绑定Command必须使用DataContext.  -->
+                                                <behav:InvokeCommandAction Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" CommandParameter="{Binding}" />
+                                            </behav:EventTrigger>
+                                        </behav:Interaction.Triggers>
+                                        <!--  底色  -->
                                         <Border Grid.RowSpan="2"
-                                                Background="Green"
+                                                Background="#1E90FF"
                                                 CornerRadius="3" />
-                                        <myMd:PopupBox HorizontalAlignment="Right">
-                                            <Button Content="删除" />
+                                        <!--  删除按钮：弹框  -->
+                                        <myMd:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
+                                            <Button Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="删除" />
                                         </myMd:PopupBox>
+                                        <!--  第一行  -->
                                         <TextBlock Margin="10,5"
                                                    FontWeight="Bold"
                                                    Text="{Binding Title}" />
+                                        <!--  第二行  -->
                                         <TextBlock Grid.Row="1"
                                                    Margin="10,5"
                                                    Text="{Binding Content}" />
+                                        <!--  右边的两个圆形，ClipToBounds表示超出部分裁剪  -->
                                         <Canvas Grid.Row="2" ClipToBounds="True">
                                             <Border Canvas.Top="10"
                                                     Canvas.Right="-50"
@@ -92,18 +126,18 @@
                                FontSize="20"
                                FontWeight="Bold"
                                Text="添加备忘录" />
-                    <StackPanel Margin="20,0"
-                                DockPanel.Dock="Top"
-                                Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="状态：" />
-                    </StackPanel>
                     <TextBox Margin="20,10"
                              myMd:HintAssist.Hint="请输入备忘录概要"
-                             DockPanel.Dock="Top" />
+                             DockPanel.Dock="Top"
+                             Text="{Binding CurrentDto.Title}" />
                     <TextBox Margin="20,10"
                              myMd:HintAssist.Hint="请输入备忘录内容"
-                             DockPanel.Dock="Top" />
-                    <Button Content="添加到备忘录" DockPanel.Dock="Top" />
+                             DockPanel.Dock="Top"
+                             Text="{Binding CurrentDto.Content}" />
+                    <Button Margin="20,10"
+                            Command="{Binding SaveCommand}"
+                            Content="保存"
+                            DockPanel.Dock="Top" />
                 </DockPanel>
             </myMd:DrawerHost.RightDrawerContent>
         </myMd:DrawerHost>

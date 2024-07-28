@@ -5,10 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MyToDo.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:myConveter1="clr-namespace:MyToDo.Common.Converters"
              xmlns:myMd="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="450"
              d:DesignWidth="800"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <myConveter1:IntToVisibilityConveter x:Key="IntToVisibility" />
+    </UserControl.Resources>
     <myMd:DialogHost>
         <myMd:DrawerHost IsRightDrawerOpen="{Binding IsRightDrawerOpen}">
             <!--  主体内容  -->
@@ -43,8 +47,18 @@
                         HorizontalAlignment="Right"
                         Command="{Binding ExecuteCommand}"
                         CommandParameter="新增"
-                        Content="+添加待办" />
+                        Content="添加待办" />
                 <!--  第二行：数据列表  -->
+                <StackPanel Grid.Row="1">
+                    <Image Width="120"
+                           Height="120"
+                           Source="/Images/wind.png" />
+                    <TextBlock Margin="0,20"
+                               HorizontalAlignment="Center"
+                               FontSize="18"
+                               Text="待办事项列表为空，请添加待办事项"
+                               Visibility="{Binding ToDoDtos.Count, Converter={StaticResource IntToVisibility}}" />
+                </StackPanel>
                 <ScrollViewer Grid.Row="1">
                     <!--  卡片数据模板  -->
                     <ItemsControl HorizontalAlignment="Center" ItemsSource="{Binding ToDoDtos}">
@@ -88,7 +102,9 @@
                                         </Border>
                                         <!--  定义右侧的删除按钮  -->
                                         <myMd:PopupBox HorizontalAlignment="Right" Panel.ZIndex="1">
-                                            <Button Content="删除" />
+                                            <Button Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="删除" />
                                         </myMd:PopupBox>
                                         <!--  第一行  -->
                                         <TextBlock Margin="10,5"

@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\user.jpg" />
+    <None Remove="Images\wind.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
@@ -15,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\user.jpg" />
+    <Resource Include="Images\wind.png" />
   </ItemGroup>
 </Project>

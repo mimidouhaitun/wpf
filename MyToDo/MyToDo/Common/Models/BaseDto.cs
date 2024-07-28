@@ -11,7 +11,7 @@ namespace MyToDo.Common.Models
 {
     /// <summary>
     /// 方式1：使用 using Prism.Mvvm; +  public class BaseDto:BindableBase + 	set { id = value;RaisePropertyChanged(); }
-	/// 方式2：当前使用的方式，wpf自带的方式
+	/// 方式2：当前使用的方式，wpf自带的方式，前端： Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     /// </summary>
     public class BaseDto:INotifyPropertyChanged
     {

@@ -61,7 +61,7 @@ namespace MyToDo.Api.Service
                 predicate: a => (string.IsNullOrWhiteSpace(query.Search) ? true : a.Title.Contains(query.Search))
                 && (query.Status == 0 ? true : a.Status == query.Status),
                 pageSize: query.PageSize, pageIndex: query.PageIndex,
-                orderBy: a => a.OrderByDescending(b => b.CreateDate));
+                orderBy: a => a.OrderByDescending(b => b.UpdateDate).ThenByDescending(a=>a.Id));
             var pagedList1 = PagedList.From<ToDoDto, ToDo>(pagedList, (todos) =>
             {
                 var todoDtos = new List<ToDoDto>();

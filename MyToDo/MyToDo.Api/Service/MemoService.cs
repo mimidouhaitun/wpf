@@ -50,7 +50,7 @@ namespace MyToDo.Api.Service
             var pagedList =await repository.GetPagedListAsync(
                 predicate:a=>string.IsNullOrWhiteSpace(query.Search)?true:a.Title.Contains(query.Search),
                 pageSize:query.PageSize,pageIndex:query.PageIndex,
-                orderBy:a=>a.OrderByDescending(b=>b.CreateDate));
+                orderBy:a=>a.OrderByDescending(b => b.UpdateDate).ThenByDescending(a => a.Id));
            
             var pagedList1= PagedList.From<MemoDto,Memo>(pagedList, (memos) =>
             {
