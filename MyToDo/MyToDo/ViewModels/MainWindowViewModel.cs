@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using MyToDo.Common;
 using MyToDo.Common.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -9,7 +10,7 @@ using System.Windows.Controls.Primitives;
 
 namespace MyToDo.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase, IMainWindowViewModel
     {
         private string _title = "Prism Application";
         public string Title
@@ -35,7 +36,6 @@ namespace MyToDo.ViewModels
         public MainWindowViewModel(IRegionManager regionManager)
         {
             menuBars=new ObservableCollection<MenuBar>();
-            CreateMenuBars();
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             this.regionManager = regionManager;
             GoBackCommand = new DelegateCommand(GoBack);
@@ -73,6 +73,17 @@ namespace MyToDo.ViewModels
             MenuBars.Add(new MenuBar() { Icon = "NoteOutline", ViewName = "ToDoView", Title = "代办事项" });
             MenuBars.Add(new MenuBar() { Icon = "NotePlusOutline", ViewName = "MemoView", Title = "备忘录" });
             MenuBars.Add(new MenuBar() { Icon = "CogOutline", ViewName = "SettingsView", Title = "设置" });
+        }
+
+        /// <summary>
+        /// 在App中调用，项目启动时调用
+        /// </summary>
+        public void OnAppStart()
+        {
+            CreateMenuBars();
+            regionManager.Regions[Extensions.PrismManager.MainViewRegionName].RequestNavigate("IndexView", callback => {
+                Journal = callback.Context.NavigationService.Journal;
+            });
         }
     }
 }

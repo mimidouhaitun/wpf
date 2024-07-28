@@ -1,4 +1,5 @@
 ﻿using DryIoc;
+using MyToDo.Common;
 using MyToDo.Service;
 using MyToDo.Views;
 using Prism.DryIoc;
@@ -37,6 +38,12 @@ namespace MyToDo
             containerRegistry.Register<IToDoService, ToDoService>();
             containerRegistry.Register<IMemoService, MemoService>();
 
+        }
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            var viewModel = App.Current.MainWindow.DataContext as IMainWindowViewModel;
+            viewModel.OnAppStart();
         }
     }
 }
