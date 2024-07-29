@@ -1,7 +1,9 @@
 ﻿using DryIoc;
 using MyToDo.Common;
 using MyToDo.Service;
+using MyToDo.ViewModels.Dialogs;
 using MyToDo.Views;
+using MyToDo.Views.Dialogs;
 using Prism.DryIoc;
 using Prism.Ioc;
 using System.Windows;
@@ -26,6 +28,9 @@ namespace MyToDo
             containerRegistry.RegisterForNavigation<SettingsView>();
             containerRegistry.RegisterForNavigation<SkinView>();
             containerRegistry.RegisterForNavigation<AboutView>();
+
+            containerRegistry.RegisterDialog<AddMemoView,AddMemoViewModel>();
+            containerRegistry.RegisterDialog<AddToDoView,AddToDoViewModel>();
 
             //这种注入方式是在MyHttpRestClient中有带常数参数Url的构造函数，需要将常数传入。
             //这种注入方式比较麻烦，采用后面一种仅注入类

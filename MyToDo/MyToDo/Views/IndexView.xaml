@@ -84,11 +84,12 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <!--  第一列  待办事项  -->
+            <!--  第一列  待办事项背景  -->
             <Border Margin="10,0"
                     Background="#bebebe"
                     CornerRadius="5"
                     Opacity="0.1" />
+            <!--  待办事项标题和按钮  -->
             <DockPanel>
                 <DockPanel Margin="20,10"
                            LastChildFill="False"
@@ -97,11 +98,15 @@
                                FontWeight="Bold"
                                Foreground="White"
                                Text="代办事项" />
+
                     <Button Width="30"
                             Height="30"
                             VerticalAlignment="Top"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="新增待办"
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignFloatingActionButton}">
+                        <!--  添加待办事项  -->
                         <materialDesign:PackIcon Kind="Add" />
                     </Button>
                 </DockPanel>
@@ -143,6 +148,8 @@
                     <Button Width="30"
                             Height="30"
                             VerticalAlignment="Top"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="新增备忘录"
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignFloatingActionButton}">
                         <materialDesign:PackIcon Kind="Add" />

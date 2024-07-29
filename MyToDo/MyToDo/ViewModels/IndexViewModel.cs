@@ -1,5 +1,8 @@
 ﻿using MyToDo.Common.Models;
+using MyToDo.Views.Dialogs;
+using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,36 +14,64 @@ namespace MyToDo.ViewModels
 {
     public class IndexViewModel:BindableBase
     {
+        #region 字段
         private ObservableCollection<TaskBar> taskBars;
+        private ObservableCollection<ToDoDto> toDoDtos;
+        private ObservableCollection<MemoDto> memoDtos;
+        private readonly IDialogService dialogService;
+        #endregion
 
+        #region 属性
         public ObservableCollection<TaskBar> TaskBars
         {
             get { return taskBars; }
-            set { taskBars = value; RaisePropertyChanged();  }
+            set { taskBars = value; RaisePropertyChanged(); }
         }
-
-        private ObservableCollection<ToDoDto> toDoDtos;
-
         public ObservableCollection<ToDoDto> ToDoDtos
         {
             get { return toDoDtos; }
             set { toDoDtos = value; RaisePropertyChanged(); }
         }
-        private ObservableCollection<MemoDto> memoDtos;
-
         public ObservableCollection<MemoDto> MemoDtos
         {
             get { return memoDtos; }
-            set { memoDtos = value;RaisePropertyChanged(); }
+            set { memoDtos = value; RaisePropertyChanged(); }
         }
+        public DelegateCommand<string> ExecuteCommand { get; set; }
+        #endregion 属性
 
-
-        public IndexViewModel()
+        #region 方法
+        public IndexViewModel(IDialogService dialogService)
         {
             TaskBars = new ObservableCollection<TaskBar>();
+            ToDoDtos = new ObservableCollection<ToDoDto>();
+            MemoDtos = new ObservableCollection<MemoDto>();
+            ExecuteCommand = new DelegateCommand<string>(Execute);
             CreateTaskBars();
-            CreateTestData();
+            this.dialogService = dialogService;
         }
+
+        private void Execute(string obj)
+        {
+            if (obj == "新增备忘录")
+            {
+                AddMemo();
+            }else if (obj == "新增待办")
+            {
+                AddToDo();
+            }
+        }
+
+        private void AddToDo()
+        {
+            dialogService.ShowDialog("AddToDoView");
+        }
+
+        private void AddMemo()
+        {
+            dialogService.ShowDialog("AddMemoView");
+        }
+
         void CreateTaskBars()
         {
             TaskBars.Add(new TaskBar() { Icom = "ClockFast", Title = "汇总", Content = "9", Color = "#FF0CA0FF", Target = "ToDoView" });
@@ -50,13 +81,13 @@ namespace MyToDo.ViewModels
         }
         void CreateTestData()
         {
-            ToDoDtos=new ObservableCollection<ToDoDto>();
-            MemoDtos=new ObservableCollection<MemoDto>();
+            
             for (int i = 0; i < 10; i++) 
             {
                 ToDoDtos.Add(new ToDoDto() { Title = "待办" + i, Content = "正在处理中..." });
                 MemoDtos.Add(new MemoDto() { Title = "备忘" + i, Content = "我的密码" });
             }
         }
+        #endregion
     }
 }
