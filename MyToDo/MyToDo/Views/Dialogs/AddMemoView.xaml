@@ -19,7 +19,7 @@
                    FontWeight="Bold"
                    Text="添加备忘录" />
         <DockPanel Grid.Row="1">
-            <TextBox Margin="20,0"
+            <TextBox Margin="20,10"
                      theme:HintAssist.Hint="请输入备忘录概要"
                      DockPanel.Dock="Top"
                      Text="{Binding Model.Title}" />
@@ -38,7 +38,7 @@
             <Button Margin="0,0,10,0"
                     Command="{Binding CancelCommand}"
                     Content="取消"
-                    Style="{StaticResource MaterialDesignOutlinedButton}" />
+                    Style="{StaticResource MaterialDesignOutlinedLightButton}" />
             <Button Command="{Binding SaveCommand}" Content="确定" />
         </StackPanel>
     </Grid>

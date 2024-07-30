@@ -1,4 +1,5 @@
-﻿using MyToDo.Common.Models;
+﻿using MyToDo.Common;
+using MyToDo.Common.Models;
 using MyToDo.Views.Dialogs;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -18,7 +19,7 @@ namespace MyToDo.ViewModels
         private ObservableCollection<TaskBar> taskBars;
         private ObservableCollection<ToDoDto> toDoDtos;
         private ObservableCollection<MemoDto> memoDtos;
-        private readonly IDialogService dialogService;
+        private readonly IMyDialogHelperService myDialogHelper;
         #endregion
 
         #region 属性
@@ -41,14 +42,14 @@ namespace MyToDo.ViewModels
         #endregion 属性
 
         #region 方法
-        public IndexViewModel(IDialogService dialogService)
+        public IndexViewModel(IMyDialogHelperService myDialogHelper)
         {
             TaskBars = new ObservableCollection<TaskBar>();
             ToDoDtos = new ObservableCollection<ToDoDto>();
             MemoDtos = new ObservableCollection<MemoDto>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
             CreateTaskBars();
-            this.dialogService = dialogService;
+            this.myDialogHelper = myDialogHelper;
         }
 
         private void Execute(string obj)
@@ -64,12 +65,13 @@ namespace MyToDo.ViewModels
 
         private void AddToDo()
         {
-            dialogService.ShowDialog("AddToDoView");
+            //Root,和MainWindow.xaml中的<materialDesign:DialogHost下的Identifier="Root"属性保持一致
+            myDialogHelper.ShowDialog("AddToDoView",null,"Root");
         }
 
         private void AddMemo()
         {
-            dialogService.ShowDialog("AddMemoView");
+            myDialogHelper.ShowDialog("AddMemoView", null, "Root");
         }
 
         void CreateTaskBars()

@@ -1,4 +1,6 @@
-﻿using MyToDo.Common.Models;
+﻿using MaterialDesignThemes.Wpf;
+using MyToDo.Common;
+using MyToDo.Common.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
@@ -10,60 +12,41 @@ using System.Threading.Tasks;
 
 namespace MyToDo.ViewModels.Dialogs
 {
-    public class AddMemoViewModel:BindableBase,IDialogAware
+    public class AddMemoViewModel : BindableBase, IViewDataContent
     {
-
-        #region 字段
-
-        private MemoDto model;
-
-        public event Action<IDialogResult> RequestClose;
-
-        #endregion
-
-        #region 属性
-        public DelegateCommand CancelCommand { get; set; }
+        public string DialogHostName { get; set; }
         public DelegateCommand SaveCommand { get; set; }
-        public MemoDto Model
-        {
-            get { return model; }
-            set { model = value; RaisePropertyChanged(); }
-        }
+        public DelegateCommand CancelCommand { get; set; }
 
-        public string Title => "添加待办事项";
-        #endregion
-
-        #region 方法
         public AddMemoViewModel() {
-            CancelCommand = new DelegateCommand(Cancel);
             SaveCommand = new DelegateCommand(Save);
+            CancelCommand = new DelegateCommand(Cancel);
         }
 
         private void Cancel()
         {
-           
+            if (DialogHost.IsDialogOpen(DialogHostName))
+            {
+                DialogHost.Close(DialogHostName,new DialogResult(ButtonResult.No));
+            }            
         }
 
         private void Save()
         {
-          
+            if (DialogHost.IsDialogOpen(DialogHostName))
+            {
+                var para = new DialogParameters();
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, para));
+            }
         }
 
-        public bool CanCloseDialog()
+        /// <summary>
+        /// 以dialog方式打开之后，回调的方法，目的是获取dialog传递过来的参数
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void OnDialogOpend(IDialogParameters parameters)
         {
-            return true;
-        }
 
-        public void OnDialogClosed()
-        {
-          
         }
-
-        public void OnDialogOpened(IDialogParameters parameters)
-        {
-            
-        }
-        #endregion
-
     }
 }

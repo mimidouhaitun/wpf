@@ -29,8 +29,8 @@ namespace MyToDo
             containerRegistry.RegisterForNavigation<SkinView>();
             containerRegistry.RegisterForNavigation<AboutView>();
 
-            containerRegistry.RegisterDialog<AddMemoView,AddMemoViewModel>();
-            containerRegistry.RegisterDialog<AddToDoView,AddToDoViewModel>();
+            containerRegistry.RegisterForNavigation<AddMemoView,AddMemoViewModel>();
+            containerRegistry.RegisterForNavigation<AddToDoView,AddToDoViewModel>();
 
             //这种注入方式是在MyHttpRestClient中有带常数参数Url的构造函数，需要将常数传入。
             //这种注入方式比较麻烦，采用后面一种仅注入类
@@ -42,6 +42,7 @@ namespace MyToDo
 
             containerRegistry.Register<IToDoService, ToDoService>();
             containerRegistry.Register<IMemoService, MemoService>();
+            containerRegistry.Register<IMyDialogHelperService, MyDialogHelperService>();
 
         }
         protected override void OnInitialized()
