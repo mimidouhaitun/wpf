@@ -1,8 +1,10 @@
-﻿using MyToDo.Common.Models;
+﻿using MyToDo.Common;
+using MyToDo.Common.Models;
 using MyToDo.Service;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,6 +19,7 @@ namespace MyToDo.ViewModels
         private ToDoDto currToDoDto;
         private bool isRightDrawerOpen;
         private readonly IToDoService service;
+        private readonly IMyDialogHelperService myDialog;
         private string search;
         private int status;
         private MyItem statusSelectedItem;
@@ -72,13 +75,14 @@ namespace MyToDo.ViewModels
         #endregion
 
         #region 方法
-        public ToDoViewModel(IToDoService service, IContainerProvider containerProvider):base(containerProvider)
+        public ToDoViewModel(IToDoService service, IContainerProvider containerProvider,IMyDialogHelperService myDialog):base(containerProvider)
         {
             ToDoDtos = new ObservableCollection<ToDoDto>();
             ExecuteCommand = new DelegateCommand<string>(Execute);
             SelectedCommand = new DelegateCommand<ToDoDto>(Selected);
             DeleteCommand = new DelegateCommand<ToDoDto>(DeleteAsync);
             this.service = service;
+            this.myDialog = myDialog;
             StatusItems = new ObservableCollection<MyItem>()
             {
                 new MyItem(){  DisplayName="待办",Value=1},
@@ -86,12 +90,21 @@ namespace MyToDo.ViewModels
             };
             StatusSelectedItem=StatusItems.FirstOrDefault(a=>a.Value==1);
         }
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="dto"></param>
         private async void DeleteAsync(ToDoDto dto)
         {
             try
             {
                 PublishLoading(true);
+                IDialogParameters parameters = new DialogParameters();
+                parameters.Add("Title", "询问");
+                parameters.Add("Content", "确定要删除待办事项吗？");
+                var dialogResult = await myDialog.ShowDialogAsync("MsgView", parameters, "Root");
+                if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
+                    return;
                 var result = await service.DeleteAsync(dto.Id);
                 if (result.Status)
                 {

@@ -66,12 +66,12 @@ namespace MyToDo.ViewModels
         private void AddToDo()
         {
             //Root,和MainWindow.xaml中的<materialDesign:DialogHost下的Identifier="Root"属性保持一致
-            myDialogHelper.ShowDialog("AddToDoView",null,"Root");
+            myDialogHelper.ShowDialogAsync("AddToDoView",null,"Root");
         }
 
         private void AddMemo()
         {
-            myDialogHelper.ShowDialog("AddMemoView", null, "Root");
+            myDialogHelper.ShowDialogAsync("AddMemoView", null, "Root");
         }
 
         void CreateTaskBars()

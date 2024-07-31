@@ -68,6 +68,7 @@
                                           DockPanel.Dock="Top"
                                           Mode="PrimaryMid">
                     <DockPanel LastChildFill="False">
+                        <!--  未指定位置，默认在左侧，抽屉按钮、前进、后退按钮  -->
                         <StackPanel Orientation="Horizontal">
                             <ToggleButton x:Name="MenuToggleButton"
                                           AutomationProperties.Name="HamburgerToggleButton"
@@ -96,6 +97,7 @@
                                        FontSize="22"
                                        Text="笔记本" />
                         </StackPanel>
+                        <!--  右侧最大化、最小化、关闭按钮  -->
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                             <Image Width="25"
                                    Height="25"

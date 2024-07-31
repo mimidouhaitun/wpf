@@ -1,36 +1,32 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MyToDo.Common;
-using MyToDo.Common.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyToDo.ViewModels.Dialogs
 {
     public class AddMemoViewModel : BindableBase, IViewDataContent
     {
+        #region 属性
         public string DialogHostName { get; set; }
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
+        #endregion
 
-        public AddMemoViewModel() {
+        #region 方法
+        public AddMemoViewModel()
+        {
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
         }
-
         private void Cancel()
         {
             if (DialogHost.IsDialogOpen(DialogHostName))
             {
-                DialogHost.Close(DialogHostName,new DialogResult(ButtonResult.No));
-            }            
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+            }
         }
-
         private void Save()
         {
             if (DialogHost.IsDialogOpen(DialogHostName))
@@ -39,7 +35,6 @@ namespace MyToDo.ViewModels.Dialogs
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, para));
             }
         }
-
         /// <summary>
         /// 以dialog方式打开之后，回调的方法，目的是获取dialog传递过来的参数
         /// </summary>
@@ -48,5 +43,7 @@ namespace MyToDo.ViewModels.Dialogs
         {
 
         }
+        #endregion
+
     }
 }

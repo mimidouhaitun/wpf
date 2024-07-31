@@ -1,5 +1,7 @@
-﻿using MyToDo.Extensions;
+﻿using MyToDo.Common;
+using MyToDo.Extensions;
 using Prism.Events;
+using Prism.Services.Dialogs;
 using System.Windows;
 
 namespace MyToDo.Views
@@ -9,7 +11,9 @@ namespace MyToDo.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(IEventAggregator eventAggregator)
+        private readonly IMyDialogHelperService myDialog;
+
+        public MainWindow(IEventAggregator eventAggregator,IMyDialogHelperService myDialog)
         {
             InitializeComponent();
             this.btnMin.Click += (s, e) =>
@@ -29,8 +33,14 @@ namespace MyToDo.Views
                 }
             };
 
-            this.btnClose.Click += (s, e) =>
+            this.btnClose.Click += async (s, e) =>
             {
+                IDialogParameters parameters = new DialogParameters();
+                parameters.Add("Title", "询问");
+                parameters.Add("Content", "确定要退出系统吗？");
+                var dialogResult = await myDialog.ShowDialogAsync("MsgView", parameters, "Root");
+                if (dialogResult.Result == Prism.Services.Dialogs.ButtonResult.No)
+                    return;
                 this.Close();
             };
             //鼠标按下拖动，移动窗口
@@ -61,6 +71,7 @@ namespace MyToDo.Views
                     dialogHostRoot.DialogContent = new ProgressView();//设置对话框内容
                 }
             });
+            this.myDialog = myDialog;
         }
 
         private void menuBar_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

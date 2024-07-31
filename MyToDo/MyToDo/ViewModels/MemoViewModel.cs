@@ -1,9 +1,11 @@
-﻿using MyToDo.Common.Models;
+﻿using MyToDo.Common;
+using MyToDo.Common.Models;
 using MyToDo.Service;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,6 +23,7 @@ namespace MyToDo.ViewModels
         private ObservableCollection<MemoDto> memoDtos;
         private bool isRightDrawerOpen;
         private readonly IMemoService service;
+        private readonly IMyDialogHelperService myDialog;
         private MemoDto currentDto;
         private string search;
         public Visibility isEmptyList;
@@ -74,7 +77,7 @@ namespace MyToDo.ViewModels
         #endregion
 
         #region 方法
-        public MemoViewModel(IMemoService service,IContainerProvider provider):base(provider)
+        public MemoViewModel(IMemoService service,IContainerProvider provider,IMyDialogHelperService myDialog):base(provider)
         {
             MemoDtos = new ObservableCollection<MemoDto>();
             AddCommand = new DelegateCommand(Add);
@@ -83,13 +86,23 @@ namespace MyToDo.ViewModels
             ExecuteCommand = new DelegateCommand(Execute);
             DeleteCommand = new DelegateCommand<MemoDto>(Delete);
             this.service = service;
+            this.myDialog = myDialog;
         }
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="dto"></param>
         private async void Delete(MemoDto dto)
         {
             try
             {
                 PublishLoading(true);
+                IDialogParameters parameters = new DialogParameters();
+                parameters.Add("Title", "询问");
+                parameters.Add("Content", "确定要删除备忘录吗？");
+                var dialogResult = await myDialog.ShowDialogAsync("MsgView", parameters, "Root");
+                if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
+                    return;
                 var result=await service.DeleteAsync(dto.Id);
                 if (result.Status)
                 {

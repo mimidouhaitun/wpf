@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using MyToDo.Common;
 using MyToDo.Service;
+using MyToDo.ViewModels;
 using MyToDo.ViewModels.Dialogs;
 using MyToDo.Views;
 using MyToDo.Views.Dialogs;
@@ -31,6 +32,7 @@ namespace MyToDo
 
             containerRegistry.RegisterForNavigation<AddMemoView,AddMemoViewModel>();
             containerRegistry.RegisterForNavigation<AddToDoView,AddToDoViewModel>();
+            containerRegistry.RegisterForNavigation<MsgView,MsgViewModel>();
 
             //这种注入方式是在MyHttpRestClient中有带常数参数Url的构造函数，需要将常数传入。
             //这种注入方式比较麻烦，采用后面一种仅注入类

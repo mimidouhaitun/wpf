@@ -49,15 +49,14 @@
                         CommandParameter="新增"
                         Content="添加待办" />
                 <!--  第二行：数据列表  -->
-                <StackPanel Grid.Row="1">
+                <StackPanel Grid.Row="1" Visibility="{Binding ToDoDtos.Count, Converter={StaticResource IntToVisibility}}">
                     <Image Width="120"
                            Height="120"
                            Source="/Images/wind.png" />
                     <TextBlock Margin="0,20"
                                HorizontalAlignment="Center"
                                FontSize="18"
-                               Text="待办事项列表为空，请添加待办事项"
-                               Visibility="{Binding ToDoDtos.Count, Converter={StaticResource IntToVisibility}}" />
+                               Text="待办事项列表为空，请添加待办事项" />
                 </StackPanel>
                 <ScrollViewer Grid.Row="1">
                     <!--  卡片数据模板  -->
@@ -79,7 +78,7 @@
                                             <RowDefinition Height="auto" />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
-                                        <!--  定义ItemsControl的单击事件，并传值  -->
+                                        <!--  （在子控件中定义父控件的事件）定义ItemsControl的单击事件，并传值  -->
                                         <behav:Interaction.Triggers>
                                             <behav:EventTrigger EventName="MouseLeftButtonUp">
                                                 <behav:InvokeCommandAction Command="{Binding DataContext.SelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}" CommandParameter="{Binding}" />

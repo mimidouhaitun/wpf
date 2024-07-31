@@ -22,6 +22,9 @@
     <Compile Update="Views\MemoView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\MsgView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ProgressView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -52,6 +55,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MemoView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MsgView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ProgressView.xaml">
