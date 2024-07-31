@@ -11,4 +11,9 @@ namespace MyToDo.Common.Models
         public string DisplayName { get; set; }
         public int Value { get; set; } // 这是你想要获取的“value” 
     }
+    public class StatusItem
+    {
+        public string DisplayName { get; set; }
+        public StatusEnum Value { get; set; } // 这是你想要获取的“value” 
+    }
 }

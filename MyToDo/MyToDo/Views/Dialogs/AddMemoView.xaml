@@ -22,13 +22,13 @@
             <TextBox Margin="20,10"
                      theme:HintAssist.Hint="请输入备忘录概要"
                      DockPanel.Dock="Top"
-                     Text="{Binding Model.Title}" />
+                     Text="{Binding CurrDto.Title}" />
             <TextBox MinHeight="100"
                      Margin="20,10"
                      theme:HintAssist.Hint="请输入备忘录内容"
                      AcceptsReturn="True"
                      DockPanel.Dock="Top"
-                     Text="{Binding Model.Content}"
+                     Text="{Binding CurrDto.Content}"
                      TextWrapping="Wrap" />
         </DockPanel>
         <StackPanel Grid.Row="2"

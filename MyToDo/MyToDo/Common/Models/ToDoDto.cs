@@ -23,9 +23,9 @@ namespace MyToDo.Common.Models
 			get { return content; }
 			set { content = value; OnPropertyChanged(); }
 		}
-		private int status;
+		private StatusEnum status;
 
-		public int Status
+		public StatusEnum Status
 		{
 			get { return status; }
 			set { status = value; OnPropertyChanged(); }

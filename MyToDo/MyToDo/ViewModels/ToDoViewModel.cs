@@ -146,7 +146,7 @@ namespace MyToDo.ViewModels
             try
             {
                 PublishLoading(true);
-                CurrToDoDto.Status = StatusSelectedItem.Value;
+                CurrToDoDto.Status = (StatusEnum)StatusSelectedItem.Value;
                 if (CurrToDoDto.Id == 0)
                 {                 
                     var result = await service.AddAsync(CurrToDoDto);
@@ -186,7 +186,7 @@ namespace MyToDo.ViewModels
                 if (result.Status)
                 {
                     CurrToDoDto = result.Result;
-                    StatusSelectedItem = StatusItems.FirstOrDefault(a => a.Value == CurrToDoDto.Status);
+                    StatusSelectedItem = StatusItems.FirstOrDefault(a => a.Value == (int)CurrToDoDto.Status);
                     IsRightDrawerOpen = true; //显示右边的抽屉窗口
                 }
             }

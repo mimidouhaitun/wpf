@@ -22,12 +22,5 @@ namespace MyToDo.Common.Models
             get { return content; }
             set { content = value; OnPropertyChanged(); }
         }
-        private int status;
-
-        public int Status
-        {
-            get { return status; }
-            set { status = value; OnPropertyChanged(); }
-        }
     }
 }
