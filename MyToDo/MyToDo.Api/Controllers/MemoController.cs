@@ -28,6 +28,12 @@ namespace MyToDo.Api.Controllers
         {
             return await memoService.GetPageListAsync(query);
         }
+        [HttpGet]
+        public ApiResponse<int> Summary()
+        {
+            return memoService.Summary();
+        }
+
         [HttpPost]
         public async Task<ApiResponse> Add([FromBody] MemoDto model)
         {

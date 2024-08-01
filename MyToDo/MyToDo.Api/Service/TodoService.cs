@@ -11,6 +11,7 @@ namespace MyToDo.Api.Service
     public interface ITodoService:IBaseService<ToDoDto>
     {
         Task<ApiResponse<IPagedList<ToDoDto>>> GetPageListAsync(ToDoParameter query);
+        ApiResponse<SummaryDto> Summary();
     }
 
     public class ToDoService : ITodoService
@@ -79,6 +80,16 @@ namespace MyToDo.Api.Service
             var repository = unitOfWork.GetRepository<ToDo>();
             var model=await repository.GetFirstOrDefaultAsync(predicate: a => a.Id == id);
             return new ApiResponse(true, model);
+        }
+
+        public ApiResponse<SummaryDto> Summary()
+        {
+            var dto = new SummaryDto() { Total = 0, CompleteCnt = 0 };
+            ApiResponse<SummaryDto> response = new ApiResponse<SummaryDto>(true, dto);
+            var repository = unitOfWork.GetRepository<ToDo>();
+            dto.Total=repository.Count(predicate: a => true);
+            dto.CompleteCnt = repository.Count(predicate: a => a.Status == 2);
+            return response;
         }
 
         public async Task<ApiResponse> UpdateAsync(ToDoDto model)

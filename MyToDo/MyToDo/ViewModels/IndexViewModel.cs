@@ -62,7 +62,6 @@ namespace MyToDo.ViewModels
             ToggleStatusCommand = new DelegateCommand<ToDoDto>(ToggleStatus);
             EditTodoCommand = new DelegateCommand<ToDoDto>(EditTodo);
             EditMemoCommand = new DelegateCommand<MemoDto>(EditMemo);
-            CreateTaskBars();
             this.myDialogHelper = myDialogHelper;
             this.toDoService = toDoService;
             this.memoService = memoService;
@@ -194,12 +193,28 @@ namespace MyToDo.ViewModels
             }
         }
 
-        void CreateTaskBars()
+        async void CreateTaskBars()
         {
-            TaskBars.Add(new TaskBar() { Icom = "ClockFast", Title = "汇总", Content = "9", Color = "#FF0CA0FF", Target = "ToDoView" });
-            TaskBars.Add(new TaskBar() { Icom = "ClockCheckOutline", Title = "已完成", Content = "9", Color = "#FF1ECA3A", Target = "ToDoView" });
-            TaskBars.Add(new TaskBar() { Icom = "ChartLineVariant", Title = "完成比例", Content = "100%", Color = "#FF02C6DC", Target = "" });
-            TaskBars.Add(new TaskBar() { Icom = "PlaylistStar", Title = "备忘录", Content = "19", Color = "#FFFFA000", Target = "MemoView" });
+            try
+            {
+                PublishLoading(true);
+                var toDoSummary = await toDoService.Summary();
+                if (toDoSummary.Status)
+                {
+                    TaskBars.Add(new TaskBar() { Icom = "ClockFast", Title = "汇总", Content = $"{toDoSummary.Result.Total}", Color = "#FF0CA0FF", Target = "ToDoView" });
+                    TaskBars.Add(new TaskBar() { Icom = "ClockCheckOutline", Title = "已完成", Content = $"{toDoSummary.Result.CompleteCnt}", Color = "#FF1ECA3A", Target = "ToDoView" });
+                    TaskBars.Add(new TaskBar() { Icom = "ChartLineVariant", Title = "完成比例", Content = $"{toDoSummary.Result.CompleteRate}", Color = "#FF02C6DC", Target = "" });
+                }
+                var memoSummary = await memoService.Summary();
+                if (memoSummary.Status)
+                {
+                    TaskBars.Add(new TaskBar() { Icom = "PlaylistStar", Title = "备忘录", Content = $"{memoSummary.Result}", Color = "#FFFFA000", Target = "MemoView" });
+                }
+            }
+            finally
+            {
+                PublishLoading(false);
+            }                        
         }
 
         void CreateTestData()
@@ -215,7 +230,7 @@ namespace MyToDo.ViewModels
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-
+            CreateTaskBars();
             //待办事项
             var para = new TodoParameter() { PageIndex = 0, PageSize = 100,Status=1 };
             var result=await toDoService.GetPageListAsync(para);

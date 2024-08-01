@@ -47,5 +47,12 @@ namespace MyToDo.Api.Controllers
         {
             return await todoService.DeleteAsync(id);
         }
+
+        [HttpGet]
+        public ApiResponse<SummaryDto> Summary()
+        {
+            var result=todoService.Summary();
+            return result;
+        }
     }
 }

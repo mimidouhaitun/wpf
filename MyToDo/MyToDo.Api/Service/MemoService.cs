@@ -9,6 +9,7 @@ namespace MyToDo.Api.Service
 {
     public interface IMemoService : IBaseService<MemoDto>
     {
+        ApiResponse<int> Summary();
     }
 
     public class MemoService : IMemoService
@@ -70,6 +71,14 @@ namespace MyToDo.Api.Service
             var repository = unitOfWork.GetRepository<Memo>();
             var model=await repository.GetFirstOrDefaultAsync(predicate: a => a.Id == id);
             return new ApiResponse(true, model);
+        }
+
+        public ApiResponse<int> Summary()
+        {
+            var repository = unitOfWork.GetRepository<Memo>();
+            var cnt= repository.Count();
+            var rsp = new ApiResponse<int>(true,cnt);
+            return rsp;
         }
 
         public async Task<ApiResponse> UpdateAsync(MemoDto model)
