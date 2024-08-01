@@ -27,6 +27,8 @@ namespace MyToDo.ViewModels
         private readonly IToDoService toDoService;
         private readonly IMemoService memoService;
         private readonly IMyDialogHelperService myDialog;
+        private readonly IRegionManager regionManager;
+        private string title;
         #endregion
 
         #region 属性
@@ -49,11 +51,22 @@ namespace MyToDo.ViewModels
         public DelegateCommand<ToDoDto> ToggleStatusCommand { get; set; }
         public DelegateCommand<ToDoDto> EditTodoCommand { get; set; }
         public DelegateCommand<MemoDto> EditMemoCommand { get; set; }
+        public DelegateCommand<TaskBar> CardClickCommand { get; set; }
+        public ToDoSummaryDto ToDoSummaryDto { get; set; }
+        public string Title
+        {
+            get => title; 
+            set
+            {
+                title = value; RaisePropertyChanged();
+            }
+        }
         #endregion 属性
 
         #region 方法
         public IndexViewModel(IMyDialogHelperService myDialogHelper,IToDoService toDoService,
-            IMemoService memoService,IContainerProvider provider,IMyDialogHelperService myDialog):base(provider) 
+            IMemoService memoService,IContainerProvider provider,IMyDialogHelperService myDialog,
+            IRegionManager regionManager) :base(provider) 
         {
             TaskBars = new ObservableCollection<TaskBar>();
             ToDoDtos = new ObservableCollection<ToDoDto>();
@@ -62,12 +75,37 @@ namespace MyToDo.ViewModels
             ToggleStatusCommand = new DelegateCommand<ToDoDto>(ToggleStatus);
             EditTodoCommand = new DelegateCommand<ToDoDto>(EditTodo);
             EditMemoCommand = new DelegateCommand<MemoDto>(EditMemo);
+            CardClickCommand = new DelegateCommand<TaskBar>(CardClick);
             this.myDialogHelper = myDialogHelper;
             this.toDoService = toDoService;
             this.memoService = memoService;
             this.myDialog = myDialog;
+            this.regionManager = regionManager;
+            Title = $"你好，痕迹！今天是{DateTime.Now.GetDateTimeFormats('D')[1].ToString()}";
         }
 
+        private void CardClick(TaskBar bar)
+        {
+            if (bar == null || string.IsNullOrWhiteSpace(bar.Target))
+                return;
+            var para = new NavigationParameters();
+            if(bar.Title == "已完成")
+            {
+                para.Add("Status", 2);
+            }else 
+            {
+                para.Add("Status", 0);
+            }
+            
+            regionManager.Regions[Extensions.PrismManager.MainViewRegionName].RequestNavigate(bar.Target, callback => {
+                var viewModel = App.Current.MainWindow.DataContext as IMainWindowViewModel;
+                viewModel.SetJournal(callback.Context.NavigationService.Journal);
+            },para);
+        }
+        /// <summary>
+        /// 设置完成或者未完成
+        /// </summary>
+        /// <param name="dto"></param>
         private async void ToggleStatus(ToDoDto dto)
         {
             IDialogParameters parameters = new DialogParameters();
@@ -87,6 +125,7 @@ namespace MyToDo.ViewModels
                 var dto2=ToDoDtos.First(a => a.Id == dto.Id);
                 ToDoDtos.Remove(dto2);
             }
+            GetSummary();
         }
 
         private void Execute(string obj)
@@ -126,6 +165,7 @@ namespace MyToDo.ViewModels
                         ToDoDtos.Insert(0,toDoDto);
                     }
                 }
+                GetSummary();
             }
         }
 
@@ -153,6 +193,7 @@ namespace MyToDo.ViewModels
                         MemoDtos.Insert(0, memoDto);
                     }
                 }
+                GetSummary();
             }
         }
 
@@ -193,46 +234,39 @@ namespace MyToDo.ViewModels
             }
         }
 
-        async void CreateTaskBars()
+        void CreateTaskBars()
         {
-            try
-            {
-                PublishLoading(true);
-                var toDoSummary = await toDoService.Summary();
-                if (toDoSummary.Status)
-                {
-                    TaskBars.Add(new TaskBar() { Icom = "ClockFast", Title = "汇总", Content = $"{toDoSummary.Result.Total}", Color = "#FF0CA0FF", Target = "ToDoView" });
-                    TaskBars.Add(new TaskBar() { Icom = "ClockCheckOutline", Title = "已完成", Content = $"{toDoSummary.Result.CompleteCnt}", Color = "#FF1ECA3A", Target = "ToDoView" });
-                    TaskBars.Add(new TaskBar() { Icom = "ChartLineVariant", Title = "完成比例", Content = $"{toDoSummary.Result.CompleteRate}", Color = "#FF02C6DC", Target = "" });
-                }
-                var memoSummary = await memoService.Summary();
-                if (memoSummary.Status)
-                {
-                    TaskBars.Add(new TaskBar() { Icom = "PlaylistStar", Title = "备忘录", Content = $"{memoSummary.Result}", Color = "#FFFFA000", Target = "MemoView" });
-                }
-            }
-            finally
-            {
-                PublishLoading(false);
-            }                        
+            TaskBars.Clear();
+            TaskBars.Add(new TaskBar() { Icom = "ClockFast", Title = "汇总", Content ="0", Color = "#FF0CA0FF", Target = "ToDoView" });
+            TaskBars.Add(new TaskBar() { Icom = "ClockCheckOutline", Title = "已完成", Content = "", Color = "#FF1ECA3A", Target = "ToDoView" });
+            TaskBars.Add(new TaskBar() { Icom = "ChartLineVariant", Title = "完成比例", Content = "", Color = "#FF02C6DC", Target = "" });
+            TaskBars.Add(new TaskBar() { Icom = "PlaylistStar", Title = "备忘录", Content = "", Color = "#FFFFA000", Target = "MemoView" });   
         }
 
-        void CreateTestData()
+        private async void GetSummary()
         {
-            
-            for (int i = 0; i < 10; i++) 
+            var toDoSummary = await toDoService.Summary();
+            if (toDoSummary.Status)
             {
-                ToDoDtos.Add(new ToDoDto() { Title = "待办" + i, Content = "正在处理中..." });
-                MemoDtos.Add(new MemoDto() { Title = "备忘" + i, Content = "我的密码" });
+                TaskBars.First(a => a.Title == "汇总").Content = toDoSummary.Result.Total.ToString();
+                TaskBars.First(a => a.Title == "已完成").Content = toDoSummary.Result.CompleteCnt.ToString();
+                TaskBars.First(a => a.Title == "完成比例").Content = toDoSummary.Result.CompleteRate.ToString();
+            }
+            var memoSummary = await memoService.Summary();
+            if (memoSummary.Status)
+            {
+                TaskBars.First(a => a.Title == "备忘录").Content = memoSummary.Result.ToString();
             }
         }
-
         public override async void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
+           
             CreateTaskBars();
-            //待办事项
-            var para = new TodoParameter() { PageIndex = 0, PageSize = 100,Status=1 };
+            GetSummary();
+
+             //待办事项
+             var para = new TodoParameter() { PageIndex = 0, PageSize = 100,Status=1 };
             var result=await toDoService.GetPageListAsync(para);
             if (result.Status)
             {

@@ -44,17 +44,17 @@ namespace MyToDo.ViewModels
 
         private void GoForward()
         {
-            if (Journal!=null && Journal.CanGoBack)
+            if (Journal != null && Journal.CanGoForward)
             {
-                Journal.GoBack();
+                Journal.GoForward();
             }   
         }
 
         private void GoBack()
         {
-            if (Journal!=null && Journal.CanGoForward)
+            if (Journal != null && Journal.CanGoBack)
             {
-                Journal.GoForward();
+                Journal.GoBack();
             }
         }
 
@@ -84,6 +84,11 @@ namespace MyToDo.ViewModels
             regionManager.Regions[Extensions.PrismManager.MainViewRegionName].RequestNavigate("IndexView", callback => {
                 Journal = callback.Context.NavigationService.Journal;
             });
+        }
+
+        public void SetJournal(IRegionNavigationJournal journal)
+        {
+            this.Journal = journal;
         }
     }
 }

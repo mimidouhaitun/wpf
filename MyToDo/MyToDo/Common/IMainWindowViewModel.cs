@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Regions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +13,6 @@ namespace MyToDo.Common
     public interface IMainWindowViewModel
     {
         void OnAppStart();
+        void SetJournal(IRegionNavigationJournal journal);
     }
 }

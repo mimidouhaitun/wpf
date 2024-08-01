@@ -222,6 +222,10 @@ namespace MyToDo.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
+            if (navigationContext.Parameters.ContainsKey("Status"))
+            {
+                this.Status = navigationContext.Parameters.GetValue<int>("Status");
+            }            
             GetToDoListAsync(); //需要放在service赋值之后
         }
         #endregion
