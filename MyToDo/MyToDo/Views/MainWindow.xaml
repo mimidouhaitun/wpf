@@ -17,8 +17,7 @@
         WindowStyle="None">
     <materialDesign:DialogHost x:Name="dialogHostRoot"
                                DialogTheme="Inherit"
-                               Identifier="Root"
-                               SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
+                               Identifier="Root">
 
         <materialDesign:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
             <!--  左侧菜单  -->
@@ -61,7 +60,11 @@
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
             <!--  内容主体  -->
-            <DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
                 <materialDesign:ColorZone x:Name="colorZone"
                                           Padding="16"
                                           materialDesign:ElevationAssist.Elevation="Dp4"
@@ -120,8 +123,18 @@
                         </StackPanel>
                     </DockPanel>
                 </materialDesign:ColorZone>
-                <ContentControl prism:RegionManager.RegionName="{x:Static myExt:PrismManager.MainViewRegionName}" />
-            </DockPanel>
+                <materialDesign:Snackbar x:Name="mySnackBar"
+                                         Grid.Row="1"
+                                         HorizontalAlignment="Right"
+                                         VerticalAlignment="Top"
+                                         Panel.ZIndex="1"
+                                         Background="Green"
+                                         FontSize="18"
+                                         FontWeight="Bold"
+                                         Foreground="White"
+                                         MessageQueue="{materialDesign:MessageQueue}" />
+                <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static myExt:PrismManager.MainViewRegionName}" />
+            </Grid>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>
 </Window>

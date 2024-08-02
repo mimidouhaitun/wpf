@@ -71,6 +71,13 @@ namespace MyToDo.Views
                     dialogHostRoot.DialogContent = new ProgressView();//设置对话框内容
                 }
             });
+
+            //订阅提示消息
+            eventAggregator.SubscribeStr(arg =>
+            {
+                mySnackBar.MessageQueue.Enqueue(arg);
+            });
+
             this.myDialog = myDialog;
         }
 

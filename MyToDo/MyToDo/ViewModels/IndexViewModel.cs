@@ -1,9 +1,11 @@
 ﻿using MyToDo.Common;
 using MyToDo.Common.Models;
+using MyToDo.Extensions;
 using MyToDo.Parameters;
 using MyToDo.Service;
 using MyToDo.Views.Dialogs;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -28,6 +30,7 @@ namespace MyToDo.ViewModels
         private readonly IMemoService memoService;
         private readonly IMyDialogHelperService myDialog;
         private readonly IRegionManager regionManager;
+        private readonly IEventAggregator eventAggregator;
         private string title;
         #endregion
 
@@ -66,7 +69,7 @@ namespace MyToDo.ViewModels
         #region 方法
         public IndexViewModel(IMyDialogHelperService myDialogHelper,IToDoService toDoService,
             IMemoService memoService,IContainerProvider provider,IMyDialogHelperService myDialog,
-            IRegionManager regionManager) :base(provider) 
+            IRegionManager regionManager, IEventAggregator eventAggregator) :base(provider) 
         {
             TaskBars = new ObservableCollection<TaskBar>();
             ToDoDtos = new ObservableCollection<ToDoDto>();
@@ -81,6 +84,7 @@ namespace MyToDo.ViewModels
             this.memoService = memoService;
             this.myDialog = myDialog;
             this.regionManager = regionManager;
+            this.eventAggregator = eventAggregator;
             Title = $"你好，痕迹！今天是{DateTime.Now.GetDateTimeFormats('D')[1].ToString()}";
         }
 
@@ -126,6 +130,8 @@ namespace MyToDo.ViewModels
                 ToDoDtos.Remove(dto2);
             }
             GetSummary();
+
+            eventAggregator.PublishStr("已完成");
         }
 
         private void Execute(string obj)
