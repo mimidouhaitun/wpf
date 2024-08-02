@@ -7,6 +7,7 @@ using MyToDo.Views;
 using MyToDo.Views.Dialogs;
 using Prism.DryIoc;
 using Prism.Ioc;
+using Prism.Services.Dialogs;
 using System.Windows;
 
 namespace MyToDo
@@ -46,12 +47,28 @@ namespace MyToDo
             containerRegistry.Register<IMemoService, MemoService>();
             containerRegistry.Register<IMyDialogHelperService, MyDialogHelperService>();
 
+            containerRegistry.RegisterDialog<LoginView,LoginViewModel>();
+
+            
+
         }
         protected override void OnInitialized()
         {
-            base.OnInitialized();
-            var viewModel = App.Current.MainWindow.DataContext as IMainWindowViewModel;
-            viewModel.OnAppStart();
+            var dialogService = Container.Resolve<IDialogService>();
+            dialogService.ShowDialog("LoginView", callBack =>
+            {
+                if (callBack.Result != ButtonResult.OK)
+                {
+                    App.Current.Shutdown();
+                }
+                else
+                {
+                    base.OnInitialized();
+                    var viewModel = App.Current.MainWindow.DataContext as IMainWindowViewModel;
+                    viewModel.OnAppStart();
+                }
+            });
+            
         }
     }
 }

@@ -3,10 +3,19 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\favicon.ico" />
+    <None Remove="Images\login.png" />
     <None Remove="Images\user.jpg" />
     <None Remove="Images\wind.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.1.0" />
@@ -15,6 +24,9 @@
     <PackageReference Include="RestSharp" Version="111.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\login.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\user.jpg" />
     <Resource Include="Images\wind.png" />
   </ItemGroup>
