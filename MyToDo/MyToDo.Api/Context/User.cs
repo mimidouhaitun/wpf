@@ -10,7 +10,7 @@ namespace MyToDo.Api.Context
     {
 #pragma warning disable
         public string Account { get; set; }
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
         public string PassWord { get; set; }
     }
 }

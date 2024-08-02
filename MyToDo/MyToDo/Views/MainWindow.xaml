@@ -125,8 +125,6 @@
                 </materialDesign:ColorZone>
                 <materialDesign:Snackbar x:Name="mySnackBar"
                                          Grid.Row="1"
-                                         HorizontalAlignment="Right"
-                                         VerticalAlignment="Top"
                                          Panel.ZIndex="1"
                                          Background="Green"
                                          FontSize="18"

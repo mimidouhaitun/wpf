@@ -131,7 +131,7 @@ namespace MyToDo.ViewModels
             }
             GetSummary();
 
-            eventAggregator.PublishStr("已完成");
+            eventAggregator.PublishStr(new Common.Events.MessageModel() { Message = "已完成", FilterName = "ToMainView" });
         }
 
         private void Execute(string obj)

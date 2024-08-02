@@ -15,7 +15,7 @@
                 OnPropertyChanged();
             }
         }
-        public string UserName
+        public string? UserName
         {
             get => userName;
             set

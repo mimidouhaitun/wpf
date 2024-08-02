@@ -2,6 +2,7 @@
 using AutoMapper;
 using MyToDo.Api.Context;
 using MyToDo.Api.Dtos;
+using MyToDo.Api.Extensions;
 
 namespace MyToDo.Api.Service
 {
@@ -23,7 +24,8 @@ namespace MyToDo.Api.Service
         public async Task<ApiResponse> LoginAsync(string account, string password)
         {
             var repository=unitOfWork.GetRepository<User>();
-            var user=await repository.GetFirstOrDefaultAsync(predicate: a => a.Account == account && a.PassWord == password);
+            var md5Pwd = password.GetMd5();
+            var user=await repository.GetFirstOrDefaultAsync(predicate: a => a.Account == account && a.PassWord == md5Pwd);
             if (user == null)
             {
                 return new ApiResponse(false, "账号或者密码错误，请重试！");
@@ -44,6 +46,7 @@ namespace MyToDo.Api.Service
             else
             {
                 user=mapper.Map<User>(userDto);
+                user.PassWord = user.PassWord.GetMd5();
                 repository.Insert(user);
                 unitOfWork.SaveChanges();
                 return new ApiResponse(true, user);

@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace MyToDo.Common.Events
 {
-    public class MessageEvent:PubSubEvent<string>
+    public class MessageModel
+    {
+        public string Message { get; set; }
+        public string FilterName { get; set; }
+    }
+    public class MessageEvent:PubSubEvent<MessageModel>
     {
     }
 }

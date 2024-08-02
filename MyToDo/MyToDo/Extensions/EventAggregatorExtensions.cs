@@ -38,9 +38,12 @@ namespace MyToDo.Extensions
         /// </summary>
         /// <param name="eventAggregator"></param>
         /// <param name="action"></param>
-        public static void SubscribeStr(this IEventAggregator eventAggregator, Action<string> action)
+        /// <param name="filterName"></param>
+        public static void SubscribeStr(this IEventAggregator eventAggregator, Action<MessageModel> action,string filterName)
         {
-            eventAggregator.GetEvent<MessageEvent>().Subscribe(action);
+            eventAggregator.GetEvent<MessageEvent>().Subscribe(action, ThreadOption.PublisherThread, true, msg => {
+                return msg.FilterName == filterName;
+            });
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace MyToDo.Extensions
         /// </summary>
         /// <param name="eventAggregator"></param>
         /// <param name="updateModel"></param>
-        public static void PublishStr(this IEventAggregator eventAggregator, string updateModel)
+        public static void PublishStr(this IEventAggregator eventAggregator, MessageModel updateModel)
         {
             eventAggregator.GetEvent<MessageEvent>().Publish(updateModel);
         }

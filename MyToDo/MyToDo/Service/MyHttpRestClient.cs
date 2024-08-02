@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MyToDo.Service
@@ -24,7 +25,14 @@ namespace MyToDo.Service
                 request.AddStringBody(baseRequest.StringBody, ContentType.Json);
             }
             var response = await restClient.ExecuteAsync(request);
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(response.Content);
+            if(response.StatusCode== HttpStatusCode.OK)
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse>(response.Content);
+            }
+            else
+            {
+                return new ApiResponse() { Status = false, Message = response.Content }; 
+            }            
         }
 
         public async Task<ApiResponse<T>> ExecuteAsync<T>(RequestConfig baseRequest)
@@ -36,7 +44,14 @@ namespace MyToDo.Service
                 request.AddStringBody(baseRequest.StringBody, ContentType.Json);
             }
             var response = await restClient.ExecuteAsync(request);
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse<T>>(response.Content);
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResponse<T>>(response.Content);
+            }
+            else
+            {
+                return new ApiResponse<T>() { Status = false, Message = response.Content };
+            }
         }
     }
 }

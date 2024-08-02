@@ -73,10 +73,10 @@ namespace MyToDo.Views
             });
 
             //订阅提示消息
-            eventAggregator.SubscribeStr(arg =>
+            eventAggregator.SubscribeStr((arg) =>
             {
                 mySnackBar.MessageQueue.Enqueue(arg);
-            });
+            }, "ToMainView");
 
             this.myDialog = myDialog;
         }
