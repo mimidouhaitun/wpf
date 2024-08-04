@@ -8,7 +8,7 @@ namespace MyToDo.Api.Service
 {
     public interface ILoginService
     {
-        Task<ApiResponse> LoginAsync(string account, string password);
+        Task<ApiResponse<UserDto>> LoginAsync(string account, string password);
         Task<ApiResponse> RegisgerAsync(UserDto userDto);
     }
     public class LoginService : ILoginService
@@ -21,18 +21,20 @@ namespace MyToDo.Api.Service
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<ApiResponse> LoginAsync(string account, string password)
+        public async Task<ApiResponse<UserDto>> LoginAsync(string account, string password)
         {
             var repository=unitOfWork.GetRepository<User>();
             var md5Pwd = password.GetMd5();
             var user=await repository.GetFirstOrDefaultAsync(predicate: a => a.Account == account && a.PassWord == md5Pwd);
             if (user == null)
             {
-                return new ApiResponse(false, "账号或者密码错误，请重试！");
+                return new ApiResponse<UserDto>(false, "账号或者密码错误，请重试！");
             }
             else
             {
-                return new ApiResponse(true, user);
+                var userDto = new UserDto();
+                mapper.Map(user, userDto);
+                return new ApiResponse<UserDto>(true, userDto);
             }
         }
 

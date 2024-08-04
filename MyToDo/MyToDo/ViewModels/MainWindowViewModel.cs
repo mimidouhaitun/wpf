@@ -4,6 +4,7 @@ using MyToDo.Common.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Controls.Primitives;
@@ -21,7 +22,9 @@ namespace MyToDo.ViewModels
 
         private ObservableCollection<MenuBar> menuBars;
         private readonly IRegionManager regionManager;
+        private readonly IDialogService dialogService;
         private IRegionNavigationJournal Journal;
+        private string userName;
 
         public ObservableCollection<MenuBar> MenuBars
         {
@@ -32,14 +35,37 @@ namespace MyToDo.ViewModels
         public DelegateCommand<MenuBar> NavigateCommand { get; private set; }
         public DelegateCommand GoBackCommand { get; private set; }
         public DelegateCommand GoForwardCommand { get; private set; }
+        public DelegateCommand LoginOutCommand { get; private set; }
+        public string UserName
+        {
+            get { return userName; }
+            set { userName = value;RaisePropertyChanged(); }
+        }
 
-        public MainWindowViewModel(IRegionManager regionManager)
+        public MainWindowViewModel(IRegionManager regionManager,IDialogService dialogService)
         {
             menuBars=new ObservableCollection<MenuBar>();
             NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
             this.regionManager = regionManager;
+            this.dialogService = dialogService;
             GoBackCommand = new DelegateCommand(GoBack);
             GoForwardCommand = new DelegateCommand(GoForward);
+            LoginOutCommand = new DelegateCommand(LoginOut);
+        }
+
+        private void LoginOut()
+        {
+            AppSession.UserDto = new UserDto();
+            App.Current.MainWindow.Hide();
+            //使用Prism自带的打开modal方法，会有标题栏，适用于与MainWindow同级别的窗口。
+            //使用MyDialogHelperService不会有标题栏
+            dialogService.ShowDialog("LoginView", dialogResult =>
+            {
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    App.Current.MainWindow.Show();
+                }
+            });
         }
 
         private void GoForward()
@@ -84,6 +110,8 @@ namespace MyToDo.ViewModels
             regionManager.Regions[Extensions.PrismManager.MainViewRegionName].RequestNavigate("IndexView", callback => {
                 Journal = callback.Context.NavigationService.Journal;
             });
+
+            UserName = AppSession.UserDto.UserName;
         }
 
         public void SetJournal(IRegionNavigationJournal journal)

@@ -18,10 +18,11 @@ namespace MyToDo.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResponse> Login([FromBody]UserDto userDto)
+        public async Task<ApiResponse<UserDto>> Login([FromBody]UserDto userDto)
         {
            return await loginService.LoginAsync(userDto.Account, userDto.PassWord);
         }
+
         [HttpPost]
         public async Task<ApiResponse> Register([FromBody] UserDto userDto)
         {

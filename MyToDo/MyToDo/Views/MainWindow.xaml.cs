@@ -75,7 +75,7 @@ namespace MyToDo.Views
             //订阅提示消息
             eventAggregator.SubscribeStr((arg) =>
             {
-                mySnackBar.MessageQueue.Enqueue(arg);
+                mySnackBar.MessageQueue.Enqueue(arg.Message);
             }, "ToMainView");
 
             this.myDialog = myDialog;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using MyToDo.Common;
 using MyToDo.Common.Models;
 using MyToDo.Extensions;
 using MyToDo.Service;
@@ -118,6 +119,7 @@ namespace MyToDo.ViewModels
             var response = await loginService.LoginAsync(UserDto);
             if (response.Status)
             {
+                AppSession.UserDto = response.Result;
                 eventAggregator.PublishStr(new Common.Events.MessageModel()
                 {
                     Message = "登录成功",
@@ -132,7 +134,6 @@ namespace MyToDo.ViewModels
                     Message = "登录失败" + response.Message,
                     FilterName = "LoginView"
                 });
-               // RequestClose.Invoke(new DialogResult(ButtonResult.No));
             }
         }
 

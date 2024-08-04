@@ -18,7 +18,7 @@ namespace MyToDo.Views
 
             eventAggregator.SubscribeStr((msg) =>
             {
-                mySnackBar.MessageQueue.Enqueue(msg);
+                mySnackBar.MessageQueue.Enqueue(msg.Message);
             }, "LoginView");
         }
     }

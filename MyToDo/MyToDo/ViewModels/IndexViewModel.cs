@@ -85,7 +85,7 @@ namespace MyToDo.ViewModels
             this.myDialog = myDialog;
             this.regionManager = regionManager;
             this.eventAggregator = eventAggregator;
-            Title = $"你好，痕迹！今天是{DateTime.Now.GetDateTimeFormats('D')[1].ToString()}";
+            Title = $"你好，{AppSession.UserDto.UserName}！今天是{DateTime.Now.GetDateTimeFormats('D')[1].ToString()}";
         }
 
         private void CardClick(TaskBar bar)

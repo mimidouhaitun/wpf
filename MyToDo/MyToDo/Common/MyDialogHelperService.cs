@@ -26,7 +26,9 @@ namespace MyToDo.Common
         }
 
         /// <summary>
-        /// 
+        /// 使用materialDesignThemes打开dialog，并强制dialogView的viewModel需要继承自定义的接口
+        /// 使用这种方式，不会有标题栏。MsgView.xaml（删除数据时弹出是否确认要删除）、
+        /// AddMemoView.xaml、AddToDoView.xaml（首页添加待办事项和备忘录）
         /// </summary>
         /// <param name="viewName"></param>
         /// <param name="parameters"></param>
@@ -44,14 +46,14 @@ namespace MyToDo.Common
             //验证实例的有效性 
             if (!(content is FrameworkElement dialogContent))
                 throw new NullReferenceException("A dialog's content must be a FrameworkElement");
-
+            //自动注入viewModel
             if (dialogContent is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
                 ViewModelLocator.SetAutoWireViewModel(view, true);
-
+            //dialog的viewModel继承自定义的接口，以便扩展自定义方法
             if (!(dialogContent.DataContext is IViewDataContent viewModel))
                 throw new NullReferenceException("A dialog's ViewModel must implement the IDialogAware interface");
 
-            viewModel.DialogHostName = dialogHostName;
+            viewModel.DialogHostName = dialogHostName; //materialDesign:DialogHost下面的 Identifier="Root"，名称保持一致
 
             DialogOpenedEventHandler eventHandler = (sender, eventArgs) =>
             {
@@ -65,36 +67,7 @@ namespace MyToDo.Common
             {
                 DialogHost.Close(viewModel.DialogHostName);
             }
-            return (IDialogResult)await DialogHost.Show(dialogContent, viewModel.DialogHostName, eventHandler);
-            //if (parameters == null)
-            //{
-            //    parameters= new DialogParameters();
-            //}
-            ////获得View的实例
-            //var view = containerExtension.Resolve<object>(viewName);
-            //if (!(view is FrameworkElement))
-            //{
-            //    throw new NullReferenceException("A dialog's content must be a FrameworkElement");
-            //}
-            //var view2 = (FrameworkElement)view;
-            //if (view2.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view2) is null)
-            //{
-            //    ViewModelLocator.SetAutoWireViewModel(view2, true);
-            //}
-            ////view对应的viewmodel需要继承自定义的接口IViewDataContent
-            //if (!(view2.DataContext is IViewDataContent))
-            //{
-            //    throw new NullReferenceException("A dialog's ViewModel must implement the IViewDataContent interface");
-            //}
-            //IViewDataContent dataContent = (IViewDataContent)view2.DataContext;
-
-            //dataContent.DialogHostName = dialogHostName;
-            //DialogOpenedEventHandler eventHandler = (sender, eventArgs) =>
-            //{
-            //    dataContent.OnDialogOpend(parameters);//View打开之后，回调ViewModel中的方法，目的是将参数传递给ViewModel
-            //    eventArgs.Session.UpdateContent(view);
-            //};
-            //return (IDialogResult) await DialogHost.Show(view2, dataContent.DialogHostName, eventHandler);
+            return (IDialogResult)await DialogHost.Show(dialogContent, viewModel.DialogHostName, eventHandler);        
         }
     }
 }

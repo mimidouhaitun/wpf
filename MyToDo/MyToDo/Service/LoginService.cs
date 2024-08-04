@@ -10,7 +10,7 @@ namespace MyToDo.Service
 {
     public interface ILoginService: IBaseService<UserDto>
     {
-        Task<ApiResponse> LoginAsync(UserDto userDto);
+        Task<ApiResponse<UserDto>> LoginAsync(UserDto userDto);
         Task<ApiResponse> Register(UserDto userDto);
     }
     public class LoginService : BaseService<UserDto>,ILoginService
@@ -19,14 +19,14 @@ namespace MyToDo.Service
         {
         }
 
-        public async Task<ApiResponse> LoginAsync(UserDto userDto)
+        public async Task<ApiResponse<UserDto>> LoginAsync(UserDto userDto)
         {
-            ApiResponse apiResponse = new ApiResponse();
+            ApiResponse<UserDto> apiResponse = new ApiResponse<UserDto>();
             var config = new RequestConfig();
             config.Method = RestSharp.Method.Post;
             config.Route = $"api/{controllerName}/Login";
             config.StringBody = JsonConvert.SerializeObject(userDto);
-            var result = await restClient.ExecuteAsync(config);
+            var result = await restClient.ExecuteAsync<UserDto>(config);
             apiResponse = result;
             return apiResponse;
         }

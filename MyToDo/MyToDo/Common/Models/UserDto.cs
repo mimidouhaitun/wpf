@@ -9,10 +9,18 @@ namespace MyToDo.Common.Models
 {
     public class UserDto:BindableBase
     {
+        private int id;
         private string account;
         private string userName;
         private string passWord;
         private string confirmPassWord;
+
+        public int Id
+        {
+            get { return id; }
+            set { id = value; }
+        }
+
         public string Account
         {
             get => account; 
